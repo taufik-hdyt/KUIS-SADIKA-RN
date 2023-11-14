@@ -11,7 +11,7 @@ import React from "react";
 import Layout from "../components/Layout";
 import CountdownTimer from "../components/CountDownTimer";
 
-export default function ModalFindOpponent({navigation}) {
+export default function FindOpponent({navigation}) {
   const handleCountdownFinish = () => {
     console.log('Countdown finished');
     navigation.navigate("Play Game")
