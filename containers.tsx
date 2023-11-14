@@ -5,9 +5,8 @@ import Login from "./screens/Login";
 import { NavigationContainer } from "@react-navigation/native";
 import ChangeProfile from "./screens/ChangeProfile";
 import StartGame from "./screens/StartGame";
-import ModalFindOpponent from "./modals/ModalFindOpponent";
 import PlayGame from "./screens/PlayGame";
-import ModalChangeAvatar from "./modals/ModalChangeAvatar";
+import FindOpponent from "./screens/FindOpponent";
 
 export default function Containers() {
   const Stack = createStackNavigator();
@@ -34,7 +33,7 @@ export default function Containers() {
             headerShown: false,
           }}
           name="Find Opponents"
-          component={ModalFindOpponent}
+          component={FindOpponent}
         />
         <Stack.Screen
           name="Play Game"
@@ -43,13 +42,6 @@ export default function Containers() {
             headerShown: false,
           }}
         />
-        {/* <Stack.Screen
-          name="Change Avatar"
-          component={ModalChangeAvatar}
-          options={{
-            presentation: "modal"
-          }}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
