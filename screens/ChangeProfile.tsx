@@ -1,22 +1,46 @@
-import { Box, Button, Icon, Image, Input, SimpleGrid } from "native-base";
+import { Box, Button, Icon, Image, Input, SimpleGrid, Text } from "native-base";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
 import { Routes } from "../navigation/routes";
 import { ProfileNavigation } from "../navigation/MainNavigation";
+import { useAvatars } from "../hooks/useAvatars";
+
+type AvatarData = {
+  id: number;
+  avatar_url: string;
+  avatar_name: string;
+  price: number;
+  created_at: string;
+  updated_at: string;
+};
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
+  const { isLoading, avatarsData } = useAvatars();
+
+  if (isLoading) return <Text>Loading...</Text>;
+
   return (
     <Layout isCenter>
       <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       <SimpleGrid columns={4} space={3} alignItems="center">
-        {Array.from({ length: 12 }, (_, index) => (
+        {avatarsData?.map((avatar: AvatarData) => (
+          <Image
+            key={avatar.id}
+            alt="avatar"
+            size={"sm"}
+            source={{
+              uri: avatar.avatar_url,
+            }}
+          />
+        ))}
+        {/* {Array.from({ length: 12 }, (_, index) => (
           <Image
             key={index}
             alt="avatar"
             source={require("../assets/cat.png")}
           />
-        ))}
+        ))} */}
       </SimpleGrid>
       <Box px="12">
         <Input

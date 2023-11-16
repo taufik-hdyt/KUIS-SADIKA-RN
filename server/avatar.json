@@ -1,0 +1,84 @@
+{
+  "avatars": [
+    {
+      "id": 12,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100938/mikir-app/boy-1_ampeln.png",
+      "avatar_name": "boy-1",
+      "price": 100,
+      "created_at": "2023-11-15T03:55:00.000000Z",
+      "updated_at": "2023-11-15T03:55:00.000000Z"
+    },
+    {
+      "id": 13,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100937/mikir-app/boy-2_aulzk6.png",
+      "avatar_name": "boy2",
+      "price": 100,
+      "created_at": "2023-11-15T03:55:11.000000Z",
+      "updated_at": "2023-11-15T03:55:11.000000Z"
+    },
+    {
+      "id": 14,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100937/mikir-app/boy-3_g9tmba.png",
+      "avatar_name": "boy-3",
+      "price": 100,
+      "created_at": "2023-11-15T03:55:32.000000Z",
+      "updated_at": "2023-11-15T03:55:32.000000Z"
+    },
+    {
+      "id": 16,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100938/mikir-app/girl-1_k3sjaz.png",
+      "avatar_name": "girl-1",
+      "price": 100,
+      "created_at": "2023-11-15T03:56:33.000000Z",
+      "updated_at": "2023-11-15T03:56:33.000000Z"
+    },
+    {
+      "id": 17,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100938/mikir-app/girl-2_mfvnnp.png",
+      "avatar_name": "girl-2",
+      "price": 100,
+      "created_at": "2023-11-15T03:56:45.000000Z",
+      "updated_at": "2023-11-15T03:57:11.000000Z"
+    },
+    {
+      "id": 18,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100938/mikir-app/girl-3_zxrxue.png",
+      "avatar_name": "girl-3",
+      "price": 100,
+      "created_at": "2023-11-15T03:57:41.000000Z",
+      "updated_at": "2023-11-15T03:57:41.000000Z"
+    },
+    {
+      "id": 19,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100938/mikir-app/girl-4_ifeu0n.png",
+      "avatar_name": "girl-4",
+      "price": 100,
+      "created_at": "2023-11-15T03:57:53.000000Z",
+      "updated_at": "2023-11-15T03:57:53.000000Z"
+    },
+    {
+      "id": 20,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100937/mikir-app/girl-5_j8cwxk.png",
+      "avatar_name": "girl-5",
+      "price": 100,
+      "created_at": "2023-11-15T03:58:05.000000Z",
+      "updated_at": "2023-11-15T03:58:05.000000Z"
+    },
+    {
+      "id": 21,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100937/mikir-app/free-boy_lun8ml.png",
+      "avatar_name": "free-boy",
+      "price": 0,
+      "created_at": "2023-11-15T03:58:21.000000Z",
+      "updated_at": "2023-11-15T03:58:21.000000Z"
+    },
+    {
+      "id": 22,
+      "avatar_url": "https://res.cloudinary.com/dkmqwtk1z/image/upload/v1700100938/mikir-app/free-girl_og6gsi.png",
+      "avatar_name": "free-girl",
+      "price": 0,
+      "created_at": "2023-11-15T04:08:08.000000Z",
+      "updated_at": "2023-11-15T04:08:08.000000Z"
+    }
+  ]
+}
