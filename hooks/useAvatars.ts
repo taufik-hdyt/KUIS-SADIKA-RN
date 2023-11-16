@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { avatarApi } from "../axios/axiosApi";
+import { Toast } from "native-base";
 
 export function useAvatars() {
   const {
@@ -11,12 +12,13 @@ export function useAvatars() {
     queryFn: async () => {
       try {
         const { data } = await avatarApi.get("/");
-        console.log(data);
-        
+
         return data;
       } catch (err) {
-        console.error(err, error);
-        return [];
+        Toast.show({
+          description: "Error bad request",
+        });
+        console.error("error from useAvatars", err, error);
       }
     },
   });

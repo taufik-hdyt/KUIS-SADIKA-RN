@@ -1,11 +1,24 @@
-import { Box, Button, Icon, Image, Input, SimpleGrid, Text } from "native-base";
+import {
+  Box,
+  Button,
+  Icon,
+  Image,
+  Input,
+  SimpleGrid,
+  Spinner,
+  Text,
+  View,
+  useToast,
+} from "native-base";
 import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
 import { Routes } from "../navigation/routes";
 import { ProfileNavigation } from "../navigation/MainNavigation";
 import { useAvatars } from "../hooks/useAvatars";
-import { useUser } from "@clerk/clerk-expo";
+import { Pressable, SafeAreaView } from "react-native";
+import { useUpdateProfile } from "../hooks/useUpdateProfile";
+import { useForm, Controller } from "react-hook-form";
 
 type AvatarData = {
   id: number;
@@ -17,65 +30,105 @@ type AvatarData = {
 };
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
-  const [selected, setSelected] = useState()
+  const toast = useToast();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { isLoading, avatarsData } = useAvatars();
-  const { user } = useUser();
+  const { form, setForm, isUpdating, updateUser } = useUpdateProfile();
+  const [selected, setSelected] = useState(null); 
+  const selectedAvatar = avatarsData?.find(
+    (avatar: AvatarData) => avatar.id === selected
+  )
+  
 
-  const userData = {
-    fullName: user?.fullName,
-    emailAddress: user?.primaryEmailAddress.emailAddress,
-    imageUrl: user?.imageUrl,
-  };
 
-  console.log(userData);
 
-  if (isLoading) return <Text>Loading...</Text>;
+  function handleSelected(avatarId: number) {
+    setSelected((prevSelected: number) =>
+      prevSelected === avatarId ? null : avatarId
+    );
+    console.log(selectedAvatar);
+    
+  }
 
-  console.log(avatarsData);
+  function onSubmit({ username }) {
+    const updatedForm = { ...form, username, avatar: selectedAvatar?.avatar_url };
+    setForm(updatedForm);
+    console.log(updatedForm);
+    updateUser();
+    toast.show({
+      description: "update success",
+    });
+  }
+
+  if (isLoading)
+    return (
+      <View flex={1} justifyContent="center">
+        <Spinner size="lg" accessibilityLabel="Loading" />
+      </View>
+    );
 
   return (
     <Layout isCenter>
       <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       <SimpleGrid columns={4} space={3} alignItems="center">
         {avatarsData?.map((avatar: AvatarData) => (
-          <Image
-            key={avatar.id}
-            alt="avatar"
-            size={"sm"}
-            source={{
-              uri: avatar.avatar_url,
-            }}
-          />
+          <Pressable key={avatar.id} onPress={() => handleSelected(avatar.id)}>
+            <Image
+              alt={avatar.avatar_name}
+              bg={selected === avatar.id ? "red.300" : "transparent"}
+              rounded="lg"
+              size={"sm"}
+              source={{
+                uri: avatar.avatar_url,
+              }}
+            />
+          </Pressable>
         ))}
-        {/* {Array.from({ length: 12 }, (_, index) => (
-          <Image
-            key={index}
-            alt="avatar"
-            source={require("../assets/cat.png")}
-          />
-        ))} */}
       </SimpleGrid>
       <Box px="12">
-        <Input
-          rounded="xl"
-          mt="4"
-          bg="white"
-          _focus={{ bg: "white" }}
-          variant="filled"
-          placeholder="Input your name"
-          InputLeftElement={
-            <Icon
-              as={
-                <FontAwesome name="pencil-square-o" size={24} color="black" />
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              onChangeText={onChange}
+              value={value}
+              onBlur={onBlur}
+              rounded="xl"
+              mt="4"
+              bg="white"
+              _focus={{ bg: "white" }}
+              variant="filled"
+              placeholder="Input your name"
+              InputLeftElement={
+                <Icon
+                  as={
+                    <FontAwesome
+                      name="pencil-square-o"
+                      size={24}
+                      color="black"
+                    />
+                  }
+                  size={5}
+                  ml="2"
+                  color="muted.400"
+                />
               }
-              size={5}
-              ml="2"
-              color="muted.400"
             />
-          }
+          )}
+          name="username"
         />
+        {errors.avatar && <Text>This is required.</Text>}
+
         <Button
-          onPress={() => navigation.navigate(Routes.StartGame)}
+          onPress={handleSubmit(onSubmit)}
+          isLoading={isUpdating}
           bg="#0176E8"
           rounded="lg"
           mt={2}
