@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import { Routes } from "../navigation/routes";
 import { ProfileNavigation } from "../navigation/MainNavigation";
 import { useAvatars } from "../hooks/useAvatars";
+import { useUser } from "@clerk/clerk-expo";
 
 type AvatarData = {
   id: number;
@@ -17,6 +18,15 @@ type AvatarData = {
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
   const { isLoading, avatarsData } = useAvatars();
+  const { user } = useUser();
+  
+  const userData = {
+    fullName: user.fullName,
+    emailAddress: user.primaryEmailAddress.emailAddress,
+    imageUrl: user.imageUrl,
+  };
+  
+  console.log(userData);
 
   if (isLoading) return <Text>Loading...</Text>;
 
