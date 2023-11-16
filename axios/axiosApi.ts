@@ -5,7 +5,7 @@ const UserApi = axios.create({
 });
 
 const avatarApi = axios.create({
-  baseURL: "http://192.168.18.87:3000/avatars",
+  baseURL: "http://192.168.18.147:3000/avatars",
 });
 
 const questionsApi = axios.create({
