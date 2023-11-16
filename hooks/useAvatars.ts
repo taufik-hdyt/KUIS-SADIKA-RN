@@ -7,16 +7,15 @@ export function useAvatars() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["avatars"],
     queryFn: async () => {
       try {
         const { data } = await avatarApi.get("/");
-
         return data;
       } catch (err) {
         console.error(err, error);
       }
     },
+    queryKey: ["avatars"],
   });
 
   return { avatarsData, isLoading, error };

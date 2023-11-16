@@ -1,4 +1,4 @@
-import { Box, Button, Icon, Image, Input, SimpleGrid, Text } from "native-base";
+import { Box, Button, Icon, Image, Input, SimpleGrid, Spinner, Text, View } from "native-base";
 import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
@@ -6,7 +6,7 @@ import { Routes } from "../navigation/routes";
 import { ProfileNavigation } from "../navigation/MainNavigation";
 import { useAvatars } from "../hooks/useAvatars";
 import { useUser } from "@clerk/clerk-expo";
-import { Pressable } from "react-native";
+import { Pressable, SafeAreaView } from "react-native";
 
 type AvatarData = {
   id: number;
@@ -19,12 +19,17 @@ type AvatarData = {
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
   const { isLoading, avatarsData } = useAvatars();
-  const [selected,setSelected] = useState(null)
-function handleSelected(e:number){
-  setSelected((prevSelected:number)=> prevSelected === e ? null : e)
-}
+  const [selected, setSelected] = useState(null);
+  function handleSelected(e: number) {
+    setSelected((prevSelected: number) => (prevSelected === e ? null : e));
+  }
   const { user } = useUser();
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading)
+    return (
+      <View flex={1} justifyContent="center">
+        <Spinner size="lg" accessibilityLabel="Loading" />
+      </View>
+    );
 
   const userData = {
     fullName: user?.fullName,
@@ -42,7 +47,7 @@ function handleSelected(e:number){
           <Pressable key={avatar.id} onPress={() => handleSelected(avatar.id)}>
             <Image
               alt={avatar.avatar_name}
-              bg={selected === avatar.id  ? "red.300": "transparent"}
+              bg={selected === avatar.id ? "red.300" : "transparent"}
               rounded="lg"
               size={"sm"}
               source={{
