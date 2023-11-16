@@ -11,10 +11,12 @@ export function useAvatars() {
     queryFn: async () => {
       try {
         const { data } = await avatarApi.get("/");
-
+        console.log(data);
+        
         return data;
       } catch (err) {
         console.error(err, error);
+        return [];
       }
     },
   });

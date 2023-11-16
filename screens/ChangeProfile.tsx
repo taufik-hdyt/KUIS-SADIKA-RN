@@ -1,5 +1,5 @@
 import { Box, Button, Icon, Image, Input, SimpleGrid, Text } from "native-base";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
 import { Routes } from "../navigation/routes";
@@ -17,18 +17,21 @@ type AvatarData = {
 };
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
+  const [selected, setSelected] = useState()
   const { isLoading, avatarsData } = useAvatars();
   const { user } = useUser();
-  
+
   const userData = {
-    fullName: user.fullName,
-    emailAddress: user.primaryEmailAddress.emailAddress,
-    imageUrl: user.imageUrl,
+    fullName: user?.fullName,
+    emailAddress: user?.primaryEmailAddress.emailAddress,
+    imageUrl: user?.imageUrl,
   };
-  
+
   console.log(userData);
 
   if (isLoading) return <Text>Loading...</Text>;
+
+  console.log(avatarsData);
 
   return (
     <Layout isCenter>
