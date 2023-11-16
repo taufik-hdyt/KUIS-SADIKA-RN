@@ -10,11 +10,13 @@ import {
 import React from "react";
 import Layout from "../components/Layout";
 import CountdownTimer from "../components/CountDownTimer";
+import { Routes } from "../navigation/routes";
+import { FindOpponentNavigation } from "../navigation/MainNavigation";
 
-export default function FindOpponent({navigation}) {
+export default function FindOpponent({ navigation }: FindOpponentNavigation) {
   const handleCountdownFinish = () => {
-    console.log('Countdown finished');
-    navigation.navigate("Play Game")
+    console.log("Countdown finished");
+    navigation.navigate(Routes.PlayGame);
   };
 
   return (

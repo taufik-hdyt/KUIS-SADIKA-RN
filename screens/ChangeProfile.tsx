@@ -2,8 +2,10 @@ import { Box, Button, Icon, Image, Input, SimpleGrid } from "native-base";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
+import { Routes } from "../navigation/routes";
+import { ProfileNavigation } from "../navigation/MainNavigation";
 
-export default function ChangeProfile({ navigation }) {
+export default function ChangeProfile({ navigation }: ProfileNavigation) {
   return (
     <Layout isCenter>
       <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
@@ -36,7 +38,7 @@ export default function ChangeProfile({ navigation }) {
           }
         />
         <Button
-          onPress={() => navigation.navigate("Start Game")}
+          onPress={() => navigation.navigate(Routes.StartGame)}
           bg="#0176E8"
           rounded="lg"
           mt={2}

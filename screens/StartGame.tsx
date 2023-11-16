@@ -16,12 +16,12 @@ import { Entypo } from "@expo/vector-icons";
 import ModalLayout from "../modals/ModalLayout";
 import ModalChangeAvatar from "../modals/ModalChangeAvatar";
 import ModalTopUp from "../modals/ModalTopUp";
+import { Routes } from "../navigation/routes";
+import { StartGameNavigation } from "../navigation/MainNavigation";
 
-export default function StartGame({ navigation }) {
-
-  const [modalChangeAvatar,setModalChangeAvatar]=useState(false)
-  const [modalTopUp,setModalTopUp]=useState(false)
-
+export default function StartGame({ navigation }: StartGameNavigation) {
+  const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
+  const [modalTopUp, setModalTopUp] = useState(false);
 
   return (
     <Layout>
@@ -69,7 +69,12 @@ export default function StartGame({ navigation }) {
             bottom="0"
             bg="#2075B8"
           >
-            <Entypo onPress={() => setModalChangeAvatar(true)} name="pencil" size={20} color="white" />
+            <Entypo
+              onPress={() => setModalChangeAvatar(true)}
+              name="pencil"
+              size={20}
+              color="white"
+            />
           </Box>
         </Box>
 
@@ -84,7 +89,7 @@ export default function StartGame({ navigation }) {
         </Box>
         <Button
           size="lg"
-          onPress={() => navigation.navigate("Find Opponents")}
+          onPress={() => navigation.navigate(Routes.FindOpponent)}
           bg="#2075B8"
           px={16}
           rounded="xl"
@@ -94,7 +99,10 @@ export default function StartGame({ navigation }) {
         </Button>
       </Box>
 
-      <ModalChangeAvatar isOpen={modalChangeAvatar} onClose={setModalChangeAvatar} />
+      <ModalChangeAvatar
+        isOpen={modalChangeAvatar}
+        onClose={setModalChangeAvatar}
+      />
       <ModalTopUp isOpen={modalTopUp} onClose={setModalTopUp} />
     </Layout>
   );
