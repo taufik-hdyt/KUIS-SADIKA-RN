@@ -13,12 +13,12 @@ import {
 import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
-import { Routes } from "../navigation/routes";
 import { ProfileNavigation } from "../navigation/MainNavigation";
 import { useAvatars } from "../hooks/useAvatars";
-import { Pressable, SafeAreaView } from "react-native";
+import { Pressable } from "react-native";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import { useForm, Controller } from "react-hook-form";
+import { Routes } from "../navigation/routes";
 
 type AvatarData = {
   id: number;
@@ -38,20 +38,17 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
   } = useForm();
   const { isLoading, avatarsData } = useAvatars();
   const { form, setForm, isUpdating, updateUser } = useUpdateProfile();
-  const [selected, setSelected] = useState(null); 
-  const selectedAvatar = avatarsData?.find(
+  const [selected, setSelected] = useState(null);
+  const selectedAvatar = avatarsData?.data.find(
     (avatar: AvatarData) => avatar.id === selected
   )
-  
-
 
 
   function handleSelected(avatarId: number) {
     setSelected((prevSelected: number) =>
       prevSelected === avatarId ? null : avatarId
     );
-    console.log(selectedAvatar);
-    
+    console.log(selectedAvatar?.id, selectedAvatar?.price);
   }
 
   function onSubmit({ username }) {
@@ -62,6 +59,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
     toast.show({
       description: "update success",
     });
+
   }
 
   if (isLoading)
@@ -71,11 +69,14 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
       </View>
     );
 
+
+
+
   return (
     <Layout isCenter>
       <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       <SimpleGrid columns={4} space={3} alignItems="center">
-        {avatarsData?.map((avatar: AvatarData) => (
+        {avatarsData?.data.map((avatar: AvatarData) => (
           <Pressable key={avatar.id} onPress={() => handleSelected(avatar.id)}>
             <Image
               alt={avatar.avatar_name}

@@ -8,7 +8,7 @@ const UserApi = axios.create({
 //   baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/avatars",
 // });
 const avatarApi = axios.create({
-  baseURL: "http://192.168.18.87:3000/avatars",
+  baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/avatars",
 });
 
 const questionsApi = axios.create({

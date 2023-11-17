@@ -3,6 +3,14 @@ import Layout from "../components/Layout";
 import { Box, Center, HStack, Text } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+
+type inputProps ={
+  length: string
+  value: Array<string>
+  disabled:boolean
+  onChange(value: Array<string>): void
+}
+
 export default function PlayGame() {
   return (
     <Layout isCenter>
@@ -20,7 +28,11 @@ export default function PlayGame() {
           <Text  fontWeight="semibold" fontSize="lg" textAlign="center" rounded="lg" mt={10} bg="gray.100" p={3}>Selain mobil, bus, pesawat, orang pergi dari Jakarta ke Surabaya biasanya menggunakan?</Text>
         </Box>
       </Box>
+
       </SafeAreaView>
     </Layout>
   );
 }
+
+
+// const inputAnswer
