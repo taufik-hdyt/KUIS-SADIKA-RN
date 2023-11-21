@@ -3,5 +3,6 @@ export const Routes = {
     ChangeProfile: "ChangeProfile",
     StartGame: "StartGame",
     FindOpponent: "FindOpponent",
-    PlayGame: "PlayGame"
+    PlayGame: "PlayGame",
+    Score: "Score"
 } as const;

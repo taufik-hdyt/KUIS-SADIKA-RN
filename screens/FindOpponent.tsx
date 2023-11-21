@@ -1,38 +1,32 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Image,
-  ScrollView,
-  Stack,
-  Text,
-} from "native-base";
-import React from "react";
+import { Box, Button, HStack, Image, ScrollView, Stack, Text } from "native-base";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import CountdownTimer from "../components/CountDownTimer";
 import { Routes } from "../navigation/routes";
 import { FindOpponentNavigation } from "../navigation/MainNavigation";
+import { Timer } from "../components/Timer";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
-  const handleCountdownFinish = () => {
-    console.log("Countdown finished");
-    navigation.navigate(Routes.PlayGame);
-  };
+  const [find, setFind] = useState<boolean>(false);
+
+  useEffect(() => {
+    setFind(true);
+  }, []);
+  console.log(find);
 
   return (
     <Layout>
       <ScrollView>
         <Box mt={16}>
-          <CountdownTimer onFinish={handleCountdownFinish} />
-          {/* <Text
-            fontWeight="bold"
-            textAlign="center"
-            fontSize="7xl"
-            color="#FFC700"
-          >
-            00:18
-          </Text> */}
-          <Text mt={-3} fontSize="xl" fontWeight="semibold" textAlign="center">
+          <Box mx="auto">
+            <Timer
+              strokeWidth={10}
+              textSize="3xl"
+              size={100}
+              durasi={30}
+              isPlaying={find}
+            />
+          </Box>
+          <Text mt={10} fontSize="xl" fontWeight="semibold" textAlign="center">
             Finding Opponent
           </Text>
           <Text fontSize="xl" fontWeight="semibold" textAlign="center">
@@ -64,6 +58,7 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
             </HStack>
           ))}
         </Stack>
+        <Button w='100px' mx='auto' mt={2} onPress={()=>navigation.navigate(Routes.PlayGame)}>Next</Button>
       </ScrollView>
     </Layout>
   );

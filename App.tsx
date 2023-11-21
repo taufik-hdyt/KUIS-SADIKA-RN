@@ -1,10 +1,10 @@
-import React from "react";
-import { NativeBaseProvider, Box } from "native-base";
-import MainNavigation from "./navigation/MainNavigation";
-import { NavigationContainer } from "@react-navigation/native";
-import { ClerkProvider } from "@clerk/clerk-expo";
-import * as SecureStore from "expo-secure-store";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from 'react';
+import { NativeBaseProvider, Box } from 'native-base';
+import MainNavigation from './navigation/MainNavigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { ClerkProvider } from '@clerk/clerk-expo';
+import * as SecureStore from 'expo-secure-store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const CLERK_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 

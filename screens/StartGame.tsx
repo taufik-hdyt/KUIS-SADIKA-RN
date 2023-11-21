@@ -1,12 +1,9 @@
 import {
-  Avatar,
   Box,
   Button,
-  Flex,
   HStack,
   IconButton,
   Image,
-  SimpleGrid,
   Spinner,
   Text,
   View,
@@ -15,7 +12,6 @@ import React, { useState } from "react";
 import Layout from "../components/Layout";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import ModalLayout from "../modals/ModalLayout";
 import ModalChangeAvatar from "../modals/ModalChangeAvatar";
 import ModalTopUp from "../modals/ModalTopUp";
 import { Routes } from "../navigation/routes";
@@ -26,22 +22,24 @@ import { useAuth } from "@clerk/clerk-expo";
 export default function StartGame({ navigation }: StartGameNavigation) {
   const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
   const [modalTopUp, setModalTopUp] = useState(false);
-  const {signOut, isLoaded, isSignedIn} = useAuth()
+  // const { signOut, isLoaded, isSignedIn } = useAuth();
 
   const { isLoading, userData } = useUserProfile();
+  
+  
 
-  if (isLoading)
-    return (
-      <View flex={1} justifyContent="center">
-        <Spinner size="lg" accessibilityLabel="Loading" />
-      </View>
-    );
+  // if (isLoading)
+  //   return (
+  //     <View flex={1} justifyContent="center">
+  //       <Spinner size="lg" accessibilityLabel="Loading" />
+  //     </View>
+  //   );
 
   return (
     <Layout>
       <HStack
         px={2}
-        mt={12}
+        mt={4}
         h="40px"
         alignContent="center"
         justifyContent="space-between"
@@ -65,7 +63,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             alt="logo"
             source={require("../assets/diamond.png")}
           />
-          <Text fontSize="md" color="#1e1e1e">
+          <Text fontWeight='semibold' fontSize="md" color="#1e1e1e">
             100
           </Text>
           <IconButton
@@ -85,7 +83,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               borderRadius={100}
               resizeMode="cover"
               alt="profile"
-              source={{ uri: userData.avatar }}
+              source={{ uri: userData?.avatar }}
               size={"md"}
             />
 
@@ -107,7 +105,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
           </Box>
 
           <Text fontSize="xl" fontWeight="semibold">
-            {userData.username}
+            {userData?.username}
           </Text>
         </Box>
 
@@ -123,18 +121,20 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             START GAME
           </Button>
         </Box>
-        {isLoaded && isSignedIn &&<Box alignItems="center" mt={16}>
-          <Button
-            size="lg"
-            onPress={() => signOut()}
-            bg="#2075B8"
-            px={6}
-            rounded="xl"
-            mt={-3}
-          >
-            Log out
-          </Button>
-        </Box>}
+        {/* {isLoaded && isSignedIn && (
+          <Box alignItems="center" mt={16}>
+            <Button
+              size="lg"
+              onPress={() => signOut()}
+              bg="#2075B8"
+              px={6}
+              rounded="xl"
+              mt={-3}
+            >
+              Log out
+            </Button>
+          </Box>
+        )} */}
       </View>
 
       <ModalChangeAvatar

@@ -8,15 +8,18 @@ const getUserApi = axios.create({
 });
 
 
-// const avatarApi = axios.create({
-//   baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/avatars",
-// });
+// server backend
+// https://pqxqvp7z-5000.asse.devtunnels.ms/avatars
 const avatarApi = axios.create({
-  baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/avatars",
+  baseURL: "https://api.npoint.io/4ab77a751b3b98fa0127",
 });
 
+
+
+// dummy data npint
+// https://pqxqvp7z-5000.asse.devtunnels.ms/questions backend
 const questionsApi = axios.create({
-  baseURL: "http://127.0.0.1/api/questions",
+  baseURL: "https://api.npoint.io/942b0a161f9febd36309",
 });
 
 export { postUserApi, getUserApi, avatarApi, questionsApi };
