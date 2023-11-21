@@ -7,7 +7,9 @@ import {
   IconButton,
   Image,
   SimpleGrid,
+  Spinner,
   Text,
+  View,
 } from "native-base";
 import React, { useState } from "react";
 import Layout from "../components/Layout";
@@ -18,10 +20,22 @@ import ModalChangeAvatar from "../modals/ModalChangeAvatar";
 import ModalTopUp from "../modals/ModalTopUp";
 import { Routes } from "../navigation/routes";
 import { StartGameNavigation } from "../navigation/MainNavigation";
+import { useUserProfile } from "../hooks/useUserProfile";
+import { useAuth } from "@clerk/clerk-expo";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
   const [modalTopUp, setModalTopUp] = useState(false);
+  const {signOut, isLoaded, isSignedIn} = useAuth()
+
+  const { isLoading, userData } = useUserProfile();
+
+  if (isLoading)
+    return (
+      <View flex={1} justifyContent="center">
+        <Spinner size="lg" accessibilityLabel="Loading" />
+      </View>
+    );
 
   return (
     <Layout>
@@ -38,18 +52,24 @@ export default function StartGame({ navigation }: StartGameNavigation) {
           source={require("../assets/logo.png")}
           mb={10}
         />
-        <HStack space={4} bg="gray.700" p={1} rounded="lg">
+        <HStack
+          space={4}
+          bg="#00edfaa0"
+          px={3}
+          py={1}
+          rounded="xl"
+          alignItems={"center"}
+        >
           <Image
-            style={{ width: 40, height: 30 }}
+            style={{ width: 30, height: 30 }}
             alt="logo"
             source={require("../assets/diamond.png")}
-            mb={10}
           />
-          <Text fontSize="xl" color="white">
+          <Text fontSize="md" color="#1e1e1e">
             100
           </Text>
           <IconButton
-            bg="#00FF47"
+            bg="#0176E8"
             rounded="lg"
             size="xs"
             icon={<Feather name="plus" size={20} color="white" />}
@@ -57,47 +77,65 @@ export default function StartGame({ navigation }: StartGameNavigation) {
           />
         </HStack>
       </HStack>
-
-      <Box alignItems="center" mt={16}>
-        <Box position="relative">
-          <Image alt="profile" source={require("../assets/avatar.png")} />
-          <Box
-            p={1}
-            rounded="full"
-            right={3}
-            position="absolute"
-            bottom="0"
-            bg="#2075B8"
-          >
-            <Entypo
-              onPress={() => setModalChangeAvatar(true)}
-              name="pencil"
-              size={20}
-              color="white"
+      <View flex={1} justifyContent={"center"} mt={-160}>
+        <Box alignItems="center" mt={16}>
+          <Box position="relative">
+            <Image
+              bgColor={"#00EEFA"}
+              borderRadius={100}
+              resizeMode="cover"
+              alt="profile"
+              source={{ uri: userData.avatar }}
+              size={"md"}
             />
+
+            <Box
+              p={1}
+              rounded="full"
+              right={-10}
+              position="absolute"
+              bottom={-5}
+              bg="#2075B8"
+            >
+              <Entypo
+                onPress={() => setModalChangeAvatar(true)}
+                name="pencil"
+                size={23}
+                color="white"
+              />
+            </Box>
           </Box>
+
+          <Text fontSize="xl" fontWeight="semibold">
+            {userData.username}
+          </Text>
         </Box>
 
-        <Text fontSize="xl" fontWeight="semibold">
-          Fauzan
-        </Text>
-      </Box>
-
-      <Box alignItems="center" mt={16}>
-        <Box>
-          <Image alt="profile" source={require("../assets/customer.png")} />
+        <Box alignItems="center" mt={16}>
+          <Button
+            size="lg"
+            onPress={() => navigation.navigate(Routes.FindOpponent)}
+            bg="#2075B8"
+            px={16}
+            rounded="xl"
+            mt={-3}
+          >
+            START GAME
+          </Button>
         </Box>
-        <Button
-          size="lg"
-          onPress={() => navigation.navigate(Routes.FindOpponent)}
-          bg="#2075B8"
-          px={16}
-          rounded="xl"
-          mt={-3}
-        >
-          START GAME
-        </Button>
-      </Box>
+        {isLoaded && isSignedIn &&<Box alignItems="center" mt={16}>
+          <Button
+            size="lg"
+            onPress={() => signOut()}
+            bg="#2075B8"
+            px={6}
+            rounded="xl"
+            mt={-3}
+          >
+            Log out
+          </Button>
+        </Box>}
+      </View>
 
       <ModalChangeAvatar
         isOpen={modalChangeAvatar}

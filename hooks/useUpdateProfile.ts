@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "native-base";
 import { useState } from "react";
-import { UserApi } from "../axios/axiosApi";
+import { postUserApi } from "../axios/axiosApi";
 import { useUser } from "@clerk/clerk-expo";
 
 export function useUpdateProfile() {
-  const { isSignedIn, user } = useUser();
-  if (!isSignedIn) {
+  const { isLoaded, isSignedIn, user } = useUser();
+  if (isLoaded && !isSignedIn) {
     console.log("not signed in");
   }
   const userEmail = user?.primaryEmailAddress.emailAddress;
@@ -22,11 +22,11 @@ export function useUpdateProfile() {
 
   const { mutate: updateUser, isPending: isUpdating } = useMutation({
     mutationFn: async () => {
-      return await UserApi.post("/", form);
+      return await postUserApi.post("/", form);
     },
     onSuccess: () => {
       toast.show({
-        description: "Hello world",
+        description: "Profile set !",
       });
       queryClient.invalidateQueries({ queryKey: ["avatars"] });
     },
