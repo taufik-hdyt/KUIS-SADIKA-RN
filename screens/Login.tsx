@@ -1,4 +1,4 @@
-import { Box, Button, Image } from "native-base";
+import { Box, Button, Image, View } from "native-base";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Layout from "../components/Layout";
@@ -27,17 +27,17 @@ export default function Login({ navigation }: LoginNavigation) {
 
   return (
     <Layout isCenter>
-      <Image alt="logo" source={require("../assets/logo.png")} mb={20} />
-      <Box px={8}>
-        <Button
-          onPress={onSelectAuth}
-          rounded="full"
-          bg="#0176E8"
-          leftIcon={<AntDesign name="google" size={24} color="white" />}
-        >
+      <View alignItems="center">
+        <Image alt="logo" source={require("../assets/logo.png")} mb={20} />
+      </View>
+      <View px={8} justifyContent={"center"}>
+        <View position={"absolute"} top={2} left={10} zIndex={1}>
+          <AntDesign name="google" size={24} color="white" />
+        </View>
+        <Button onPress={onSelectAuth} rounded="full" bg="#0176E8">
           CONTINUE WITH GOOGLE
         </Button>
-      </Box>
+      </View>
     </Layout>
   );
 }

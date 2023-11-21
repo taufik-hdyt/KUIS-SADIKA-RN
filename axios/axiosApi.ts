@@ -1,8 +1,12 @@
 import axios from "axios";
 
-const UserApi = axios.create({
+const postUserApi = axios.create({
   baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/user",
 });
+const getUserApi = axios.create({
+  baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/checkEmail/",
+});
+
 
 // const avatarApi = axios.create({
 //   baseURL: "https://pqxqvp7z-5000.asse.devtunnels.ms/avatars",
@@ -15,4 +19,4 @@ const questionsApi = axios.create({
   baseURL: "http://127.0.0.1/api/questions",
 });
 
-export { UserApi, avatarApi, questionsApi };
+export { postUserApi, getUserApi, avatarApi, questionsApi };

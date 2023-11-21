@@ -20,7 +20,7 @@ import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import { useForm, Controller } from "react-hook-form";
 import { Routes } from "../navigation/routes";
 
-type AvatarData = {
+export type AvatarData = {
   id: number;
   avatar_url: string;
   avatar_name: string;
@@ -30,36 +30,43 @@ type AvatarData = {
 };
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
-  const toast = useToast();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { isLoading, avatarsData } = useAvatars();
+
+  const freeAvatars = avatarsData?.data.filter(
+    (avatar: AvatarData) => avatar.price === 0
+  );
+
   const { form, setForm, isUpdating, updateUser } = useUpdateProfile();
   const [selected, setSelected] = useState(null);
-  const selectedAvatar = avatarsData?.data.find(
-    (avatar: AvatarData) => avatar.id === selected
-  )
 
+  const selectedAvatar = freeAvatars?.find(
+    (avatar: AvatarData) => avatar.id === selected
+  );
 
   function handleSelected(avatarId: number) {
     setSelected((prevSelected: number) =>
       prevSelected === avatarId ? null : avatarId
     );
-    console.log(selectedAvatar?.id, selectedAvatar?.price);
+    // console.log(selectedAvatar?.id, selectedAvatar?.price);
   }
 
   function onSubmit({ username }) {
-    const updatedForm = { ...form, username, avatar: selectedAvatar?.avatar_url };
+    const updatedForm = {
+      ...form,
+      username,
+      avatar: selectedAvatar?.avatar_url,
+    };
     setForm(updatedForm);
     console.log(updatedForm);
     updateUser();
-    toast.show({
-      description: "update success",
-    });
-
+    setTimeout(() => {
+      navigation.navigate(Routes.StartGame);
+    }, 1000);
   }
 
   if (isLoading)
@@ -69,14 +76,13 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
       </View>
     );
 
-
-
-
   return (
     <Layout isCenter>
-      <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
+      <View alignItems="center">
+        <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
+      </View>
       <SimpleGrid columns={4} space={3} alignItems="center">
-        {avatarsData?.data.map((avatar: AvatarData) => (
+        {freeAvatars.map((avatar: AvatarData) => (
           <Pressable key={avatar.id} onPress={() => handleSelected(avatar.id)}>
             <Image
               alt={avatar.avatar_name}
@@ -90,6 +96,11 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
           </Pressable>
         ))}
       </SimpleGrid>
+      <View justifyContent={"center"} alignItems="center" my={3}>
+        <Text fontWeight={"semibold"} fontSize={"md"} color={"#0176E8"}>
+          Choose your starter avatar
+        </Text>
+      </View>
       <Box px="12">
         <Controller
           control={control}
@@ -135,6 +146,14 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
           mt={2}
         >
           Continue
+        </Button>
+        <Button
+          onPress={() => navigation.navigate(Routes.StartGame)}
+          bg="#0176E8"
+          rounded="lg"
+          mt={2}
+        >
+          go to next page
         </Button>
       </Box>
     </Layout>
