@@ -20,7 +20,44 @@ import { Routes } from "../navigation/routes";
 import CustomKeyboard from "../components/Keyboard";
 
 export default function PlayGame({ navigation }) {
-  const [answer, setAnswer] = useState<string>("");
+  // const [answer, setAnswer] = useState<string>("");
+  // const [score, setScore] = useState(0);
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+
+  // const toast = useToast();
+
+  // // data question from API
+  // const { questionsData } = useQuestions();
+  // const question = questionsData;
+
+  // const getAnswer = question?.[currentQuestionIndex]?.answer;
+  // const answerLength = question?.[currentQuestionIndex]?.answer.length;
+
+  // const handleAnswer = () => {
+  //   if (currentQuestionIndex < question?.length - 1) {
+  //     if (answer !== getAnswer) {
+  //       return toast.show({ description: "Jawaban salah" });
+  //     }
+  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+  //     setAnswer("");
+  //   } else {
+  //     console.log("Semua pertanyaan telah dijawab.");
+  //   }
+  // };
+
+  // const [input, setInput] = useState("");
+  // function handleKeyPress(key: string) {
+  //   if (input.length < answerLength) {
+  //     setInput((prevData) => prevData + key);
+  //   }
+  //   if (key === "⌫") {
+  //     const text = input.split("");
+  //     console.log(text);
+  //     setInput(text.slice(0, -1).join(""));
+  //   }
+  // }
+  // console.log(input);
+  const [input, setInput] = useState("");
   const [score, setScore] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
@@ -29,34 +66,35 @@ export default function PlayGame({ navigation }) {
   // data question from API
   const { questionsData } = useQuestions();
   const question = questionsData;
-
-  const getAnswer = question?.[currentQuestionIndex]?.answer;
+  const getAnswer = question?.[currentQuestionIndex]?.answer.toUpperCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
   const handleAnswer = () => {
     if (currentQuestionIndex < question?.length - 1) {
-      if (answer !== getAnswer) {
+      if (input !== getAnswer)
         return toast.show({ description: "Jawaban salah" });
-      }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setAnswer("");
+      setInput("");
+      setScore(score + 60 / 10);
     } else {
       console.log("Semua pertanyaan telah dijawab.");
     }
   };
 
-  const [input, setInput] = useState("");
   function handleKeyPress(key: string) {
     if (input.length < answerLength) {
-      setInput((prevData) => prevData + key);
+      setInput((prevData) => prevData + key.toUpperCase());
     }
     if (key === "⌫") {
       const text = input.split("");
-      console.log(text);
-      setInput(text.slice(0, -1).join(""));
+      // console.log(text);
+      setInput(text.slice(0, -1).join("").toUpperCase());
     }
   }
-  console.log(input);
+  // console.log(input.toUpperCase());
+  // console.log(getAnswer);
+
+  const progressQuestion = (currentQuestionIndex + 1) * 20;
 
   return (
     <Layout>
@@ -82,7 +120,7 @@ export default function PlayGame({ navigation }) {
               <Text color="black">
                 {currentQuestionIndex}/{question?.length} Questions
               </Text>
-              <Progress mt={1} mb={4} value={10} />
+              <Progress mt={1} mb={4} value={progressQuestion} />
             </Stack>
             <Center>
               <HStack
@@ -161,7 +199,7 @@ export default function PlayGame({ navigation }) {
             <View mt={5}>
               <View flexDir={"row"} justifyContent={"space-evenly"}>
                 <Button
-                  isDisabled={answer === ""}
+                  isDisabled={input === ""}
                   onPress={handleAnswer}
                   bg="primary.500"
                   w={"40"}
