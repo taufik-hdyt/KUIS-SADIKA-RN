@@ -25,15 +25,11 @@ export default function PlayGame({ navigation }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
 
   const toast = useToast();
-
   // data question from API
   const { questionsData } = useQuestions();
   const question = questionsData;
   const getAnswer = question?.[currentQuestionIndex]?.answer.toUpperCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
-  // console.log(question?.length);
-  console.log(currentQuestionIndex);
-
 
   const handleAnswer = () => {
     if (currentQuestionIndex < question?.length ) {
@@ -57,15 +53,8 @@ export default function PlayGame({ navigation }) {
       // console.log(text);
       setInput(text.slice(0, -1).join("").toUpperCase());
     }
-  }
-  // console.log(input.toUpperCase());
-  // console.log(getAnswer);
-  
-  
-
+  }  
   const progressQuestion = (currentQuestionIndex + 1) * 50;
-
-
 
   return (
     <Layout>
