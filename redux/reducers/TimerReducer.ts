@@ -11,10 +11,7 @@ const initialState = {
   timer: null,
   status: "idle",
   correctAnswer: null,
-  shouldTick: false,
 } as TimerTypes;
-
-let timerId;
 
 export const Time = createSlice({
   name: "time",
@@ -33,20 +30,6 @@ export const Time = createSlice({
         state.timer = 8;
       }
     },
-    startTimer: (state) => {
-      if (timerId) {
-        clearInterval(timerId);
-      }
-      timerId = setInterval(() => {
-        // You can't dispatch an action here because `dispatch` is not available.
-        // Instead, you can set a flag in your state to indicate that the timer should tick.
-        state.shouldTick = true;
-      }, 1000);
-    },
-    stopTimer: (state) => {
-      clearInterval(timerId);
-      state.shouldTick = false;
-    },
     tick: (state) => {
       if (state.timer > 0) {
         state.timer -= 1;
@@ -55,7 +38,6 @@ export const Time = createSlice({
   },
 });
 
-export const { setTimer, setStatus, tick, startTimer, stopTimer } =
-  Time.actions;
+export const { setTimer, setStatus, tick } = Time.actions;
 
 export default Time.reducer;

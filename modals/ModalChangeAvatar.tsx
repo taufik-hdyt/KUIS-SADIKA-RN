@@ -31,9 +31,14 @@ export default function ModalChangeAvatar({ isOpen, onClose }: Props) {
     );
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={() => onClose(false)}>
+    <Modal
+      size="xl"
+      isOpen={isOpen}
+      onClose={() => onClose(false)}
+      animationPreset="slide"
+    >
       <Modal.Content>
-        <Modal.CloseButton />
+        <Modal.CloseButton/>
         <Modal.Header>Change Avatar</Modal.Header>
         <VStack pb={4}>
           <Box alignItems={"center"} height={380}>

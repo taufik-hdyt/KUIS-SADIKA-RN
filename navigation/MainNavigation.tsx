@@ -47,9 +47,9 @@ const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigation() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName={Routes.Login}>
       {isLoaded && !isSignedIn ? (
-        <Stack.Group>
+        <Stack.Group >
           <Stack.Screen
             options={{
               headerShown: false,
@@ -77,8 +77,8 @@ export default function MainNavigation() {
                   </HStack>
                 </Button>
               ),
-              headerTitle:"",
-              headerLeft: ()=> ("")
+              headerTitle: "",
+              headerLeft: () => "",
             }}
           />
           <Stack.Screen

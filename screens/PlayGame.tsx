@@ -4,29 +4,38 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   HStack,
-  Icon,
-  Input,
+  Image,
+  Progress,
   Stack,
   Text,
+  View,
   useToast,
 } from "native-base";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuestions } from "../hooks/useQuestions";
 import { Timer } from "../components/Timer";
 import { FontAwesome } from "@expo/vector-icons";
 import { Routes } from "../navigation/routes";
+import CustomKeyboard from "../components/Keyboard";
 
 export default function PlayGame({ navigation }) {
   const [answer, setAnswer] = useState<string>("");
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { questionsData } = useQuestions();
+  const [score, setScore] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+
   const toast = useToast();
-  const question = questionsData?.data;
+
+  // data question from API
+  const { questionsData } = useQuestions();
+  const question = questionsData;
+
+  const getAnswer = question?.[currentQuestionIndex]?.answer;
+  const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
   const handleAnswer = () => {
     if (currentQuestionIndex < question?.length - 1) {
-      if (answer !== question[currentQuestionIndex]?.answer) {
+      if (answer !== getAnswer) {
         return toast.show({ description: "Jawaban salah" });
       }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -36,11 +45,45 @@ export default function PlayGame({ navigation }) {
     }
   };
 
+  const [input, setInput] = useState("");
+  function handleKeyPress(key: string) {
+    if (input.length < answerLength) {
+      setInput((prevData) => prevData + key);
+    }
+    if (key === "⌫") {
+      const text = input.split("");
+      console.log(text);
+      setInput(text.slice(0, -1).join(""));
+    }
+  }
+  console.log(input);
+
   return (
-    <Layout isCenter>
-      <SafeAreaView>
-        <Box p={6}>
-          <Box py={8} rounded="xl" bg="black" px={3}>
+    <Layout>
+      <Box style={{ flex: 1 }}>
+        <View flex={4} mt={12} mx={5} position={"relative"}>
+          <View zIndex={2}>
+            <HStack justifyContent="flex-end" alignContent="center">
+              <Flex
+                bg="gray.100"
+                px={3}
+                direction="row"
+                rounded="xl"
+                alignItems="center"
+              >
+                <Text mr={3} fontSize="xl" fontWeight="bold">
+                  100
+                </Text>
+                <FontAwesome name="trophy" size={34} color="#FFD700" />
+              </Flex>
+            </HStack>
+
+            <Stack>
+              <Text color="black">
+                {currentQuestionIndex}/{question?.length} Questions
+              </Text>
+              <Progress mt={1} mb={4} value={10} />
+            </Stack>
             <Center>
               <HStack
                 alignItems="center"
@@ -55,54 +98,92 @@ export default function PlayGame({ navigation }) {
                 </Text>
               </HStack>
             </Center>
-
-            <Text
-              fontWeight="semibold"
-              fontSize="lg"
-              textAlign="center"
+          </View>
+          <View position={"absolute"} zIndex={0} bottom={10}>
+            <View
+              h={"200px"}
+              bg="#2895F3"
               rounded="lg"
-              mt={10}
-              bg="gray.100"
               p={3}
+              justifyContent={"center"}
+              w={"300px"}
             >
-              {/* {question[currentQuestionIndex]?.question} */}
-            </Text>
-            <Stack space={2} mt={10}>
-              <Input
-                _focus={{ bg: "white" }}
-                variant="filled"
-                bg="white"
-                placeholder="Input your answer "
-                fontSize="lg"
-                value={answer}
-                onChangeText={(e) => setAnswer(e)}
-                InputLeftElement={
-                  <Icon
-                    as={
-                      <FontAwesome
-                        name="pencil-square-o"
-                        size={24}
-                        color="black"
-                      />
-                    }
-                    size={8}
-                    ml="2"
-                    color="muted.400"
-                  />
-                }
-              />
-              <Button
-                isDisabled={answer === ""}
-                onPress={handleAnswer}
-                bg="primary.500"
+              <Text
+                fontWeight="semibold"
+                fontSize="2xl"
+                color={"white"}
+                w={"70%"}
+                lineHeight={"30px"}
+                ml={3}
               >
-                Answer
-              </Button>
-              <Button onPress={()=> navigation.navigate(Routes.Score)}>Next Page</Button>
+                {question ? question[currentQuestionIndex]?.question : ""}
+              </Text>
+            </View>
+          </View>
+          <View position={"absolute"} zIndex={1} bottom={0} right={-48}>
+            <Image
+              source={require("../assets/nanya.png")}
+              alt="bg"
+              size={"200px"}
+            />
+          </View>
+        </View>
+
+        <View flex={3} bgColor={"#005EAE"}>
+          <View>
+            <Stack justifyContent="center" space={2}>
+              {/*=================== ANSWERRR============= */}
+              <Box position="relative" height="10" bg="#2895F3">
+                <HStack space={1} position="absolute" ml={16}>
+                  {Array.from({ length: answerLength }, (_, indx) => (
+                    <Box w={10} bg="white" h={10} key={indx}></Box>
+                  ))}
+                </HStack>
+
+                <HStack space={1} ml={16}>
+                  {input
+                    .split("")
+                    .slice(0, answerLength)
+                    .map((data, idx) => (
+                      <Box
+                        justifyContent="center"
+                        alignItems="center"
+                        h={10}
+                        w={10}
+                        key={idx}
+                      >
+                        {data}
+                      </Box>
+                    ))}
+                </HStack>
+              </Box>
             </Stack>
-          </Box>
-        </Box>
-      </SafeAreaView>
+            <View mt={5}>
+              <View flexDir={"row"} justifyContent={"space-evenly"}>
+                <Button
+                  isDisabled={answer === ""}
+                  onPress={handleAnswer}
+                  bg="primary.500"
+                  w={"40"}
+                >
+                  Answer
+                </Button>
+                <Button
+                  onPress={() => navigation.navigate(Routes.Score)}
+                  w={"40"}
+                >
+                  Next Page
+                </Button>
+              </View>
+              <View mt={2}>
+                <CustomKeyboard
+                  onKeyPress={(key: string) => handleKeyPress(key)}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Box>
     </Layout>
   );
 }
