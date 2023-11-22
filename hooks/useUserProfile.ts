@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserApi } from "../axios/axiosApi";
 import { Toast } from "native-base";
 import { useUser } from "@clerk/clerk-expo"
-import { Use } from "react-native-svg";
 
 type UserData = {
     avatar: string;
@@ -17,6 +16,7 @@ export function useUserProfile() {
     console.log("not signed in");
   }
   const userEmail = user?.primaryEmailAddress.emailAddress;
+  // ${userEmail}
   const {
     data: userData,
     isLoading,
@@ -25,7 +25,9 @@ export function useUserProfile() {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const { data } = await getUserApi.get(`/${userEmail}`);
+        const { data } = await getUserApi.get(`/`);
+        // console.log("log from useUserProfile", data);
+        
         return data as UserData;
       } catch (err) {
         Toast.show({

@@ -1,3 +1,4 @@
+import { Entypo, Feather } from "@expo/vector-icons";
 import {
   Box,
   Button,
@@ -9,31 +10,30 @@ import {
   View,
 } from "native-base";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Layout from "../components/Layout";
-import { Feather } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { useUserProfile } from "../hooks/useUserProfile";
 import ModalChangeAvatar from "../modals/ModalChangeAvatar";
 import ModalTopUp from "../modals/ModalTopUp";
-import { Routes } from "../navigation/routes";
 import { StartGameNavigation } from "../navigation/MainNavigation";
-import { useUserProfile } from "../hooks/useUserProfile";
-import { useAuth } from "@clerk/clerk-expo";
+import { Routes } from "../navigation/routes";
+import { setStatus } from "../redux/reducers/TimerReducer";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
+  const dispatch = useDispatch();
   const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
   const [modalTopUp, setModalTopUp] = useState(false);
   // const { signOut, isLoaded, isSignedIn } = useAuth();
 
   const { isLoading, userData } = useUserProfile();
-  
-  
+  // console.log("log from start game", userData);
 
-  // if (isLoading)
-  //   return (
-  //     <View flex={1} justifyContent="center">
-  //       <Spinner size="lg" accessibilityLabel="Loading" />
-  //     </View>
-  //   );
+  if (isLoading)
+    return (
+      <View flex={1} justifyContent="center">
+        <Spinner size="lg" accessibilityLabel="Loading" />
+      </View>
+    );
 
   return (
     <Layout>
@@ -63,7 +63,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             alt="logo"
             source={require("../assets/diamond.png")}
           />
-          <Text fontWeight='semibold' fontSize="md" color="#1e1e1e">
+          <Text fontWeight="semibold" fontSize="md" color="#1e1e1e">
             100
           </Text>
           <IconButton
@@ -112,7 +112,10 @@ export default function StartGame({ navigation }: StartGameNavigation) {
         <Box alignItems="center" mt={16}>
           <Button
             size="lg"
-            onPress={() => navigation.navigate(Routes.FindOpponent)}
+            onPress={() => {
+              dispatch(setStatus("matchmaking"));
+              navigation.navigate(Routes.FindOpponent);
+            }}
             bg="#2075B8"
             px={16}
             rounded="xl"

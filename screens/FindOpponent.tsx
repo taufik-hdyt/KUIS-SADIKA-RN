@@ -1,31 +1,50 @@
-import { Box, Button, HStack, Image, ScrollView, Stack, Text } from "native-base";
-import React, { useEffect, useState } from "react";
+import { Box, Button, HStack, Image, View, Stack, Text } from "native-base";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { Routes } from "../navigation/routes";
 import { FindOpponentNavigation } from "../navigation/MainNavigation";
 import { Timer } from "../components/Timer";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { setStatus, tick } from "../redux/reducers/TimerReducer";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
+  const { timer } = useSelector((time: RootState) => time.user);
+  const dispatch = useDispatch();
+
+  // console.log("from findOpponent", timer);
+
   const [find, setFind] = useState<boolean>(false);
 
-  useEffect(() => {
-    setFind(true);
-    setTimeout(()=> {
-      navigation.navigate(Routes.PlayGame)
-    },30000)
-  }, []);
-
+  useFocusEffect(
+    useCallback(() => {
+      // console.log(" on screen findOpponent");
+      setFind(true);
+      const timerInterval = setInterval(() => {
+        dispatch(tick());
+      }, 1000);
+      if (timer === 0) {
+        navigation.navigate(Routes.PlayGame);
+        setFind(false);
+      }
+      return () => {
+        // console.log("from findOpponent: Navigate to PlayGame");
+        clearInterval(timerInterval);
+      };
+    }, [timer, dispatch, navigation])
+  );
 
   return (
     <Layout>
-      <ScrollView>
+      <View>
         <Box mt={16}>
           <Box mx="auto">
             <Timer
               strokeWidth={10}
               textSize="3xl"
               size={100}
-              durasi={30}
+              durasi={6}
               isPlaying={find}
             />
           </Box>
@@ -61,8 +80,18 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
             </HStack>
           ))}
         </Stack>
-        <Button w='100px' mx='auto' mt={2} onPress={()=>navigation.navigate(Routes.PlayGame)}>Next</Button>
-      </ScrollView>
+        <Button
+          w="100px"
+          mx="auto"
+          mt={2}
+          onPress={() => {
+            dispatch(setStatus("playing"));
+            navigation.navigate(Routes.PlayGame);
+          }}
+        >
+          Next
+        </Button>
+      </View>
     </Layout>
   );
 }

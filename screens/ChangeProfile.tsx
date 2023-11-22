@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -9,7 +10,7 @@ import {
   Text,
   View,
 } from "native-base";
-import React, { useState } from "react";
+import { FlatList } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Layout from "../components/Layout";
 import { ProfileNavigation } from "../navigation/MainNavigation";
@@ -36,7 +37,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
   } = useForm();
   const { isLoading, avatarsData } = useAvatars();
 
-  const freeAvatars = avatarsData?.data.filter(
+  const freeAvatars = avatarsData?.filter(
     (avatar: AvatarData) => avatar.price === 0
   );
 
@@ -81,19 +82,24 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
         <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       </View>
       <SimpleGrid columns={4} space={3} alignItems="center">
-        {freeAvatars.map((avatar: AvatarData) => (
-          <Pressable key={avatar.id} onPress={() => handleSelected(avatar.id)}>
-            <Image
-              alt={avatar.avatar_name}
-              bg={selected === avatar.id ? "red.300" : "transparent"}
-              rounded="lg"
-              size={"sm"}
-              source={{
-                uri: avatar.avatar_url,
-              }}
-            />
-          </Pressable>
-        ))}
+        <FlatList
+          data={freeAvatars}
+          numColumns={4}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item: avatar }) => (
+            <Pressable onPress={() => handleSelected(avatar.id)}>
+              <Image
+                alt={avatar.avatar_name}
+                bg={selected === avatar.id ? "red.300" : "transparent"}
+                rounded="lg"
+                size={"sm"}
+                source={{
+                  uri: avatar.avatar_url,
+                }}
+              />
+            </Pressable>
+          )}
+        />
       </SimpleGrid>
       <View justifyContent={"center"} alignItems="center" my={3}>
         <Text fontWeight={"semibold"} fontSize={"md"} color={"#0176E8"}>
@@ -135,7 +141,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
           )}
           name="username"
         />
-        {errors.avatar && <Text>This is required.</Text>}
+        {errors.username && <Text>This is required.</Text>}
 
         <Button
           onPress={handleSubmit(onSubmit)}
@@ -147,7 +153,9 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
           Continue
         </Button>
         <Button
-          onPress={() => navigation.navigate(Routes.StartGame)}
+          onPress={() => {
+            navigation.navigate(Routes.StartGame);
+          }}
           bg="#0176E8"
           rounded="lg"
           mt={2}

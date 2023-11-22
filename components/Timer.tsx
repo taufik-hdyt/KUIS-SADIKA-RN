@@ -1,9 +1,5 @@
 import { Text } from "native-base";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import { Routes } from "../navigation/routes";
-import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { FindOpponentNavigation } from "../navigation/MainNavigation";
 
 interface Props {
   isPlaying: boolean;
@@ -18,15 +14,16 @@ export const Timer = ({
   size,
   textSize,
   strokeWidth,
-  
 }: Props) => {
+  // console.log("From timer component:", durasi);
+
   return (
     <CountdownCircleTimer
       isPlaying={isPlaying}
       duration={durasi}
       size={size ? size : 50}
       colors={["#3EC70B", "#F94C10", "#FE0000"]}
-      colorsTime={[20, 10, 0,]}
+      colorsTime={[20, 10, 0]}
       strokeWidth={strokeWidth ? strokeWidth : 8}
     >
       {({ remainingTime }) => (
