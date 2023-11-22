@@ -10,8 +10,11 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
 
   useEffect(() => {
     setFind(true);
+    setTimeout(()=> {
+      navigation.navigate(Routes.PlayGame)
+    },30000)
   }, []);
-  console.log(find);
+
 
   return (
     <Layout>

@@ -65,7 +65,7 @@ export default function PlayGame({ navigation }) {
               bg="gray.100"
               p={3}
             >
-              {question[currentQuestionIndex]?.question}
+              {/* {question[currentQuestionIndex]?.question} */}
             </Text>
             <Stack space={2} mt={10}>
               <Input
