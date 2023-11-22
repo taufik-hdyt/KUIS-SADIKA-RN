@@ -1,4 +1,4 @@
-import { Box, Button, Image, View } from "native-base";
+import {  Button, Image, View } from "native-base";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Layout from "../components/Layout";

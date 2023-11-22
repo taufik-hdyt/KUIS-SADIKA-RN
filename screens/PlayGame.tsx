@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import {
   Box,
@@ -20,46 +20,9 @@ import { Routes } from "../navigation/routes";
 import CustomKeyboard from "../components/Keyboard";
 
 export default function PlayGame({ navigation }) {
-  // const [answer, setAnswer] = useState<string>("");
-  // const [score, setScore] = useState(0);
-  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-
-  // const toast = useToast();
-
-  // // data question from API
-  // const { questionsData } = useQuestions();
-  // const question = questionsData;
-
-  // const getAnswer = question?.[currentQuestionIndex]?.answer;
-  // const answerLength = question?.[currentQuestionIndex]?.answer.length;
-
-  // const handleAnswer = () => {
-  //   if (currentQuestionIndex < question?.length - 1) {
-  //     if (answer !== getAnswer) {
-  //       return toast.show({ description: "Jawaban salah" });
-  //     }
-  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
-  //     setAnswer("");
-  //   } else {
-  //     console.log("Semua pertanyaan telah dijawab.");
-  //   }
-  // };
-
-  // const [input, setInput] = useState("");
-  // function handleKeyPress(key: string) {
-  //   if (input.length < answerLength) {
-  //     setInput((prevData) => prevData + key);
-  //   }
-  //   if (key === "⌫") {
-  //     const text = input.split("");
-  //     console.log(text);
-  //     setInput(text.slice(0, -1).join(""));
-  //   }
-  // }
-  // console.log(input);
   const [input, setInput] = useState("");
   const [score, setScore] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
 
   const toast = useToast();
 
@@ -68,14 +31,18 @@ export default function PlayGame({ navigation }) {
   const question = questionsData;
   const getAnswer = question?.[currentQuestionIndex]?.answer.toUpperCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
+  // console.log(question?.length);
+  console.log(currentQuestionIndex);
+
 
   const handleAnswer = () => {
-    if (currentQuestionIndex < question?.length - 1) {
+    if (currentQuestionIndex < question?.length ) {
       if (input !== getAnswer)
         return toast.show({ description: "Jawaban salah" });
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setInput("");
       setScore(score + 60 / 10);
+      
     } else {
       console.log("Semua pertanyaan telah dijawab.");
     }
@@ -93,8 +60,12 @@ export default function PlayGame({ navigation }) {
   }
   // console.log(input.toUpperCase());
   // console.log(getAnswer);
+  
+  
 
-  const progressQuestion = (currentQuestionIndex + 1) * 20;
+  const progressQuestion = (currentQuestionIndex + 1) * 50;
+
+
 
   return (
     <Layout>
@@ -110,7 +81,7 @@ export default function PlayGame({ navigation }) {
                 alignItems="center"
               >
                 <Text mr={3} fontSize="xl" fontWeight="bold">
-                  100
+                  {score}
                 </Text>
                 <FontAwesome name="trophy" size={34} color="#FFD700" />
               </Flex>
@@ -118,7 +89,7 @@ export default function PlayGame({ navigation }) {
 
             <Stack>
               <Text color="black">
-                {currentQuestionIndex}/{question?.length} Questions
+                {currentQuestionIndex + 1}/{question?.length} Questions
               </Text>
               <Progress mt={1} mb={4} value={progressQuestion} />
             </Stack>
@@ -139,7 +110,7 @@ export default function PlayGame({ navigation }) {
           </View>
           <View position={"absolute"} zIndex={0} bottom={10}>
             <View
-              h={"200px"}
+              h={"180px"}
               bg="#2895F3"
               rounded="lg"
               p={3}
@@ -148,11 +119,11 @@ export default function PlayGame({ navigation }) {
             >
               <Text
                 fontWeight="semibold"
-                fontSize="2xl"
+                fontSize="xl"
                 color={"white"}
-                w={"70%"}
+                w={"60%"}
                 lineHeight={"30px"}
-                ml={3}
+                
               >
                 {question ? question[currentQuestionIndex]?.question : ""}
               </Text>
