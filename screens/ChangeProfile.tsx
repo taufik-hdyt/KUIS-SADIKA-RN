@@ -8,7 +8,6 @@ import {
   Spinner,
   Text,
   View,
-  useToast,
 } from "native-base";
 import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";

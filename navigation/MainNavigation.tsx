@@ -8,8 +8,11 @@ import StartGame from "../screens/StartGame";
 import PlayGame from "../screens/PlayGame";
 import FindOpponent from "../screens/FindOpponent";
 import { Routes } from "../navigation/routes";
+import { AntDesign } from "@expo/vector-icons";
 
 import { useAuth } from "@clerk/clerk-expo";
+import ScoreScreen from "../screens/ScoreScreen";
+import { Button, HStack, Text } from "native-base";
 
 type MainStackParamList = {
   Login: undefined;
@@ -17,6 +20,7 @@ type MainStackParamList = {
   StartGame: undefined;
   FindOpponent: undefined;
   PlayGame: undefined;
+  Score: undefined;
 };
 
 export type LoginNavigation = StackScreenProps<MainStackParamList, "Login">;
@@ -36,11 +40,12 @@ export type PlayGameNavigation = StackScreenProps<
   MainStackParamList,
   "PlayGame"
 >;
+export type ScoreNavigation = StackScreenProps<MainStackParamList, "Score">;
 
 const Stack = createStackNavigator<MainStackParamList>();
 
 export default function MainNavigation() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, signOut } = useAuth();
   return (
     <Stack.Navigator>
       {isLoaded && !isSignedIn ? (
@@ -64,7 +69,16 @@ export default function MainNavigation() {
             name={Routes.StartGame}
             component={StartGame}
             options={{
-              headerShown: false,
+              headerRight: () => (
+                <Button onPress={() => signOut()} variant="unstyled">
+                  <HStack space={2} mr={3}>
+                    <AntDesign name="logout" size={24} color="black" />
+                    <Text fontWeight="semibold">Logout</Text>
+                  </HStack>
+                </Button>
+              ),
+              headerTitle:"",
+              headerLeft: ()=> ("")
             }}
           />
           <Stack.Screen
@@ -77,6 +91,13 @@ export default function MainNavigation() {
           <Stack.Screen
             name={Routes.PlayGame}
             component={PlayGame}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={Routes.Score}
+            component={ScoreScreen}
             options={{
               headerShown: false,
             }}
