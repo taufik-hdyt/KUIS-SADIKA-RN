@@ -1,10 +1,12 @@
-import React from 'react';
-import { NativeBaseProvider, Box } from 'native-base';
-import MainNavigation from './navigation/MainNavigation';
-import { NavigationContainer } from '@react-navigation/native';
-import { ClerkProvider } from '@clerk/clerk-expo';
-import * as SecureStore from 'expo-secure-store';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from "react";
+import { NativeBaseProvider, Box } from "native-base";
+import MainNavigation from "./navigation/MainNavigation";
+import { NavigationContainer } from "@react-navigation/native";
+import { ClerkProvider } from "@clerk/clerk-expo";
+import * as SecureStore from "expo-secure-store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const CLERK_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -37,11 +39,13 @@ export default function App() {
   return (
     <ClerkProvider publishableKey={CLERK_KEY!} tokenCache={tokenCache}>
       <QueryClientProvider client={client}>
-        <NativeBaseProvider>
-          <NavigationContainer>
-            <MainNavigation />
-          </NavigationContainer>
-        </NativeBaseProvider>
+        <Provider store={store}>
+          <NativeBaseProvider>
+            <NavigationContainer>
+              <MainNavigation />
+            </NavigationContainer>
+          </NativeBaseProvider>
+        </Provider>
       </QueryClientProvider>
     </ClerkProvider>
   );

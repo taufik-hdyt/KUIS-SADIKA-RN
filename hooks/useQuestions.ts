@@ -12,6 +12,8 @@ export function useQuestions() {
     queryFn: async () => {
       try {
         const { data } = await questionsApi.get("/");
+        // console.log(data);
+        
         return data
       } catch (err) {
         Toast.show({

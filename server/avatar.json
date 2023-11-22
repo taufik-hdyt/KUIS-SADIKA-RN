@@ -80,5 +80,27 @@
       "created_at": "2023-11-15T04:08:08.000000Z",
       "updated_at": "2023-11-15T04:08:08.000000Z"
     }
-  ]
+  ],
+  "questions": [
+    {
+      "id": 4,
+      "answer": "Tenaga",
+      "question": "Di rumah makan padang, selain pakai sendok kita makan pakai?",
+      "created_at": "2023-11-13T00:00:00.000000Z",
+      "updated_at": "2023-11-14T03:38:38.000000Z"
+    },
+    {
+      "id": 5,
+      "answer": "Celana",
+      "question": "Selain mobil, bus atau pesawat, orang pergi dari Jakarta ke Surabaya biasanya menggunakan?",
+      "created_at": "2023-11-13T00:00:00.000000Z",
+      "updated_at": "2023-11-13T00:00:00.000000Z"
+    }
+  ],
+  "user": {
+    "avatar": "https://iili.io/HpOXaV9.md.png",
+    "email": "root@mail.com",
+    "id": "1",
+    "username": "Patchouli"
+  }
 }
