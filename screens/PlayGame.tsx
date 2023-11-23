@@ -28,7 +28,7 @@ export default function PlayGame({ navigation }) {
   // data question from API
   const { questionsData } = useQuestions();
   const question = questionsData;
-  const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase()
+  const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
   // const handleAnswer = () => {
@@ -38,7 +38,7 @@ export default function PlayGame({ navigation }) {
   //     setCurrentQuestionIndex(currentQuestionIndex + 1);
   //     setInput("");
   //     setScore(score + 60 / 10);
-      
+
   //   } else {
   //     console.log("Semua pertanyaan telah dijawab.");
   //   }
@@ -52,38 +52,25 @@ export default function PlayGame({ navigation }) {
       const text = input.split("");
       // console.log(text);
       setInput(text.slice(0, -1).join("").toLowerCase());
-    }    
-  }  
-  
-  useEffect(()=>{
-    if(input.length === answerLength){
-      console.log("halo");
-      if(getAnswer === input){
-        console.log("berhasil");
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setInput("")
+    }
+  }
 
-        if(question?.length === currentQuestionIndex + 1){
-          navigation.navigate(Routes.Score)
-          console.log("sama");
-          
+  useEffect(() => {
+    if (input.length === answerLength) {
+      if (getAnswer === input) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setInput("");
+
+        if (question?.length === currentQuestionIndex + 1) {
+          navigation.navigate(Routes.Score);
         }
-        console.log(question?.length,currentQuestionIndex);
-      }else{
-        setInput("")
+        console.log(question?.length, currentQuestionIndex);
+      } else {
+        setInput("");
       }
     }
-    // console.log("input",input);
-    // console.log("answer",getAnswer);
-  },[input])
+  }, [input]);
 
-  // console.log(question.length);
-  // console.log(currentQuestionIndex);
-  
-  
-
-  
-  
   const progressQuestion = (currentQuestionIndex + 1) * 50;
 
   return (
@@ -142,7 +129,6 @@ export default function PlayGame({ navigation }) {
                 color={"white"}
                 w={"60%"}
                 lineHeight={"20px"}
-                
               >
                 {question ? question[currentQuestionIndex]?.question : ""}
               </Text>
