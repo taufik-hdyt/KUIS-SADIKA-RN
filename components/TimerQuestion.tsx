@@ -12,6 +12,8 @@ interface Props {
   textSize?: string;
   strokeWidth?: number;
   isCheckAnswer: any;
+  setQuestionIndex: (e:number)=> void
+  questionIndex?: number
 }
 export const TimerQuestion = ({
   durasi,
@@ -20,6 +22,7 @@ export const TimerQuestion = ({
   textSize,
   strokeWidth,
   isCheckAnswer,
+  questionIndex,setQuestionIndex
 }: Props) => {
   const dispatch = useDispatch();
   return (
@@ -30,15 +33,15 @@ export const TimerQuestion = ({
       colors={["#3EC70B", "#F94C10", "#FE0000"]}
       colorsTime={[durasi, durasi * 0.5, 0]}
       strokeWidth={strokeWidth ? strokeWidth : 8}
+      onComplete={() => {
+        setQuestionIndex(questionIndex + 1)
+        return { shouldRepeat: true, delay: .5 }
+      }}
     >
       {({ remainingTime }) => {
         useEffect(() => {
-          if (remainingTime == 0) {
-            dispatch(setGoNextQuestion(true));
-          }
           if (isCheckAnswer) {
             let score = 3 * 2;
-
             if (remainingTime > durasi * 0.8) {
               score += 69;
             } else if (remainingTime > durasi * 0.5) {

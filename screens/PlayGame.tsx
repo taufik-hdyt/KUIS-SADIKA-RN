@@ -36,6 +36,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const { timer, goNextQuestion } = useSelector(
     (state: RootState) => state.timer
   );
+
   const score = useSelector((state: RootState) => state.score);
   console.log("answer => ", score, "go next: " + goNextQuestion);
 
@@ -69,11 +70,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   // }, []);
 
   useEffect(() => {
-    if (goNextQuestion) {
-      dispatch(setAnswer(value.toLowerCase()));
-      dispatch(setTimer(timer));
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (checkAnswer) {
+     if (checkAnswer) {
       dispatch(setAnswer(value.toLowerCase()));
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setValue("");
@@ -87,7 +84,9 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
         toast.show({ description: "Jawaban salah", placement: "top" });
       }
     }
-  }, [value.toLowerCase(), getAnswer]);
+  }, [value.toLowerCase(), getAnswer, currentQuestionIndex]);
+
+  console.log(timer);
 
   return (
     <Layout>
@@ -129,6 +128,8 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   pr={6}
                 >
                   <TimerQuestion
+                    setQuestionIndex={setCurrentQuestionIndex}
+                    questionIndex={currentQuestionIndex}
                     durasi={timer}
                     isPlaying={true}
                     isCheckAnswer={checkAnswer}
