@@ -22,38 +22,68 @@ import CustomKeyboard from "../components/Keyboard";
 export default function PlayGame({ navigation }) {
   const [input, setInput] = useState("");
   const [score, setScore] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(1);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   const toast = useToast();
   // data question from API
   const { questionsData } = useQuestions();
   const question = questionsData;
-  const getAnswer = question?.[currentQuestionIndex]?.answer.toUpperCase();
+  const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase()
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
-  const handleAnswer = () => {
-    if (currentQuestionIndex < question?.length ) {
-      if (input !== getAnswer)
-        return toast.show({ description: "Jawaban salah" });
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setInput("");
-      setScore(score + 60 / 10);
+  // const handleAnswer = () => {
+  //   if (currentQuestionIndex < question?.length ) {
+  //     if (input !== getAnswer)
+  //       return toast.show({ description: "Jawaban salah" });
+  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+  //     setInput("");
+  //     setScore(score + 60 / 10);
       
-    } else {
-      console.log("Semua pertanyaan telah dijawab.");
-    }
-  };
+  //   } else {
+  //     console.log("Semua pertanyaan telah dijawab.");
+  //   }
+  // };
 
   function handleKeyPress(key: string) {
     if (input.length < answerLength) {
-      setInput((prevData) => prevData + key.toUpperCase());
+      setInput((prevData) => prevData + key.toLowerCase());
     }
     if (key === "⌫") {
       const text = input.split("");
       // console.log(text);
-      setInput(text.slice(0, -1).join("").toUpperCase());
-    }
+      setInput(text.slice(0, -1).join("").toLowerCase());
+    }    
   }  
+  
+  useEffect(()=>{
+    if(input.length === answerLength){
+      console.log("halo");
+      if(getAnswer === input){
+        console.log("berhasil");
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setInput("")
+
+        if(question?.length === currentQuestionIndex + 1){
+          navigation.navigate(Routes.Score)
+          console.log("sama");
+          
+        }
+        console.log(question?.length,currentQuestionIndex);
+      }else{
+        setInput("")
+      }
+    }
+    // console.log("input",input);
+    // console.log("answer",getAnswer);
+  },[input])
+
+  // console.log(question.length);
+  // console.log(currentQuestionIndex);
+  
+  
+
+  
+  
   const progressQuestion = (currentQuestionIndex + 1) * 50;
 
   return (
@@ -111,7 +141,7 @@ export default function PlayGame({ navigation }) {
                 fontSize="xl"
                 color={"white"}
                 w={"60%"}
-                lineHeight={"30px"}
+                lineHeight={"20px"}
                 
               >
                 {question ? question[currentQuestionIndex]?.question : ""}
@@ -160,7 +190,7 @@ export default function PlayGame({ navigation }) {
               <View flexDir={"row"} justifyContent={"space-evenly"}>
                 <Button
                   isDisabled={input === ""}
-                  onPress={handleAnswer}
+                  // onPress={handleAnswer}
                   bg="primary.500"
                   w={"40"}
                 >
