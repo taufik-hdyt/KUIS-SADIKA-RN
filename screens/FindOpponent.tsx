@@ -6,11 +6,12 @@ import { FindOpponentNavigation } from "../navigation/MainNavigation";
 import { Timer } from "../components/Timer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { setStatus, tick } from "../redux/reducers/TimerReducer";
+import { setGoNext, setStatus } from "../redux/reducers/TimerReducer";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
-  const { timer } = useSelector((time: RootState) => time.user);
+  const { timer, goNext } = useSelector((time: RootState) => time.timer);
+
   const dispatch = useDispatch();
 
   // console.log("from findOpponent", timer);
@@ -19,32 +20,37 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
 
   useFocusEffect(
     useCallback(() => {
-      // console.log(" on screen findOpponent");
+      console.log(
+        "in findOpponent => ",
+        "mm timer: " + timer,
+        "gonext: " + goNext
+      );
       setFind(true);
-      const timerInterval = setInterval(() => {
-        dispatch(tick());
-      }, 1000);
-      if (timer === 0) {
-        navigation.navigate(Routes.PlayGame);
-        setFind(false);
+      if (goNext) {
+        navigation.replace(Routes.PlayGame);
       }
       return () => {
-        // console.log("from findOpponent: Navigate to PlayGame");
-        clearInterval(timerInterval);
+        dispatch(setStatus("playing"));
+        setFind(false);
+        console.log(
+          "leaving findOpponent => ",
+          "mm timer: " + timer,
+          "gonext: " + goNext
+        );
       };
-    }, [timer, dispatch, navigation])
+    }, [goNext])
   );
 
   return (
     <Layout>
-      <View>
+      <View flex={1}>
         <Box mt={16}>
           <Box mx="auto">
             <Timer
               strokeWidth={10}
               textSize="3xl"
               size={100}
-              durasi={6}
+              durasi={timer}
               isPlaying={find}
             />
           </Box>
@@ -57,7 +63,7 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
         </Box>
 
         <Stack space={2} alignItems="center" mt={8}>
-          {Array.from({ length: 4 }, (_, index) => (
+          {Array.from({ length: 5 }, (_, index) => (
             <HStack
               key={index}
               borderColor="white"
@@ -90,6 +96,11 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
           }}
         >
           Next
+        </Button>
+      </View>
+      <View>
+        <Button w="100px" mx="auto" mt={2} onPress={() => {}}>
+          add player
         </Button>
       </View>
     </Layout>

@@ -83,20 +83,41 @@
   ],
   "questions": [
     {
-      "id": 4,
-      "answer": "Tenaga",
-      "question": "Di rumah makan padang, selain pakai sendok kita makan pakai?",
-      "created_at": "2023-11-13T00:00:00.000000Z",
-      "updated_at": "2023-11-14T03:38:38.000000Z"
+    "id": 1,
+    "answer": "Tenaga",
+    "question": "Di rumah makan padang, selain pakai sendok kita makan pakai?",
+    "created_at": "2023-11-13T00:00:00.000000Z",
+    "updated_at": "2023-11-14T03:38:38.000000Z"
     },
     {
-      "id": 5,
-      "answer": "Celana",
-      "question": "Selain mobil, bus atau pesawat, orang pergi dari Jakarta ke Surabaya biasanya menggunakan?",
-      "created_at": "2023-11-13T00:00:00.000000Z",
-      "updated_at": "2023-11-13T00:00:00.000000Z"
+    "id": 2,
+    "answer": "Celana",
+    "question": "Selain mobil, bus atau pesawat, orang pergi dari Jakarta ke Surabaya biasanya menggunakan?",
+    "created_at": "2023-11-13T00:00:00.000000Z",
+    "updated_at": "2023-11-13T00:00:00.000000Z"
+    },
+    {
+    "id": 3,
+    "answer": "Tolong",
+    "question": "Biasa digunakan untuk menyalakan atau mematikan TV dan AC?",
+    "created_at": "2023-11-13T00:00:00.000000Z",
+    "updated_at": "2023-11-13T00:00:00.000000Z"
+    },
+    {
+    "id": 4,
+    "answer": "Noleh",
+    "question": "Seseorang yang memimpin sebuah desa, biasanya dipanggil pak?",
+    "created_at": "2023-11-13T00:00:00.000000Z",
+    "updated_at": "2023-11-13T00:00:00.000000Z"
+    },
+    {
+    "id": 5,
+    "answer": "Telan",
+    "question": "Senikmat-nikmatnya makan diluar lebih nikmat makan di?",
+    "created_at": "2023-11-13T00:00:00.000000Z",
+    "updated_at": "2023-11-13T00:00:00.000000Z"
     }
-  ],
+    ],
   "user": {
     "avatar": "https://iili.io/HpOXaV9.md.png",
     "email": "root@mail.com",

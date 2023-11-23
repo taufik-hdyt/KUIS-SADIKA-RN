@@ -18,7 +18,6 @@ export default function Login({ navigation }: LoginNavigation) {
       console.log("file login.tsx:23 = ", createdSessionId);
       if (createdSessionId && setActive) {
         setActive({ session: createdSessionId });
-        navigation.navigate(Routes.ChangeProfile);
       }
     } catch (error) {
       console.error("OAUTH ERROR", error);

@@ -4,13 +4,16 @@ export interface TimerTypes {
   timer: number | null;
   status: "idle" | "matchmaking" | "playing" | "finished";
   correctAnswer: boolean | null;
-  shouldTick: boolean;
+  goNext: boolean;
+  goNextQuestion: boolean;
 }
 
 const initialState = {
   timer: null,
   status: "idle",
   correctAnswer: null,
+  goNext: false,
+  goNextQuestion: false,
 } as TimerTypes;
 
 export const Time = createSlice({
@@ -24,20 +27,26 @@ export const Time = createSlice({
       state.status = action.payload;
       if (state.status === "idle" || state.status === "finished") {
         state.timer = null;
+        state.goNext = false;
       } else if (state.status === "matchmaking") {
-        state.timer = 6;
+        state.timer = 10;
+        state.goNext = false;
       } else if (state.status === "playing") {
-        state.timer = 8;
+        state.goNext = false;
+        state.timer = 30;
       }
     },
-    tick: (state) => {
-      if (state.timer > 0) {
-        state.timer -= 1;
-      }
+    setGoNext: (state, action) => {
+      state.goNext = action.payload;
     },
+    setGoNextQuestion: (state, action) => {
+      state.goNext = action.payload;
+    },
+    resetState: () => initialState,
   },
 });
 
-export const { setTimer, setStatus, tick } = Time.actions;
+export const { setTimer, setStatus, setGoNext, setGoNextQuestion } =
+  Time.actions;
 
 export default Time.reducer;

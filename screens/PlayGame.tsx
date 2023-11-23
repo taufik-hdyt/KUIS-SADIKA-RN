@@ -1,203 +1,202 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../components/Layout";
 import {
   Box,
-  Button,
   Center,
   Flex,
   HStack,
   Image,
   Progress,
+  Spinner,
   Stack,
   Text,
   View,
   useToast,
 } from "native-base";
-import { useQuestions } from "../hooks/useQuestions";
-import { Timer } from "../components/Timer";
+import React, { useEffect, useState } from "react";
+import Layout from "../components/Layout";
+
 import { FontAwesome } from "@expo/vector-icons";
 import { Routes } from "../navigation/routes";
-import CustomKeyboard from "../components/Keyboard";
 
-export default function PlayGame({ navigation }) {
-  const [input, setInput] = useState("");
-  const [score, setScore] = useState(0);
+import { ScrollView, StyleSheet } from "react-native";
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from "react-native-confirmation-code-field";
+import { useDispatch, useSelector } from "react-redux";
+import { TimerQuestion } from "../components/TimerQuestion";
+import { useQuestions } from "../hooks/useQuestions";
+import { PlayGameNavigation } from "../navigation/MainNavigation";
+import { setAnswer, setScore } from "../redux/reducers/ScoreReducer";
+import { RootState } from "../redux/store";
+import { setGoNextQuestion, setTimer } from "../redux/reducers/TimerReducer";
+
+export default function PlayGame({ navigation }: PlayGameNavigation) {
+  const { timer, goNextQuestion } = useSelector(
+    (state: RootState) => state.timer
+  );
+  const score = useSelector((state: RootState) => state.score);
+  console.log("answer => ", score, "go next: " + goNextQuestion);
+
+  const dispatch = useDispatch();
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [value, setValue] = useState<string>("");
 
   const toast = useToast();
-  // data question from API
-  const { questionsData } = useQuestions();
+
+  const { questionsData, isLoading } = useQuestions();
   const question = questionsData;
+
+  const getQuestion = question?.[currentQuestionIndex]?.question;
   const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
-  // const handleAnswer = () => {
-  //   if (currentQuestionIndex < question?.length ) {
-  //     if (input !== getAnswer)
-  //       return toast.show({ description: "Jawaban salah" });
-  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
-  //     setInput("");
-  //     setScore(score + 60 / 10);
+  const progressQuestion = (currentQuestionIndex + 1) * 20;
 
-  //   } else {
-  //     console.log("Semua pertanyaan telah dijawab.");
-  //   }
-  // };
+  const CELL_COUNT = answerLength;
+  const checkAnswer = value.toLowerCase() === getAnswer;
 
-  function handleKeyPress(key: string) {
-    if (input.length < answerLength) {
-      setInput((prevData) => prevData + key.toLowerCase());
-    }
-    if (key === "⌫") {
-      const text = input.split("");
-      // console.log(text);
-      setInput(text.slice(0, -1).join("").toLowerCase());
-    }
-  }
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
+
+  // useEffect(() => {
+
+  // }, []);
 
   useEffect(() => {
-    if (input.length === answerLength) {
-      if (getAnswer === input) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setInput("");
-
-        if (question?.length === currentQuestionIndex + 1) {
-          navigation.navigate(Routes.Score);
-        }
-        console.log(question?.length, currentQuestionIndex);
-      } else {
-        setInput("");
+    if (goNextQuestion) {
+      dispatch(setAnswer(value.toLowerCase()));
+      dispatch(setTimer(timer));
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else if (checkAnswer) {
+      dispatch(setAnswer(value.toLowerCase()));
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setValue("");
+      if (question?.length === currentQuestionIndex + 1) {
+        navigation.navigate(Routes.Score);
+        setCurrentQuestionIndex(0);
+        setValue("");
+      }
+    } else {
+      if (answerLength === value.length) {
+        toast.show({ description: "Jawaban salah", placement: "top" });
       }
     }
-  }, [input]);
-
-  const progressQuestion = (currentQuestionIndex + 1) * 50;
+  }, [value.toLowerCase(), getAnswer]);
 
   return (
     <Layout>
-      <Box style={{ flex: 1 }}>
-        <View flex={4} mt={12} mx={5} position={"relative"}>
-          <View zIndex={2}>
-            <HStack justifyContent="flex-end" alignContent="center">
-              <Flex
-                bg="gray.100"
-                px={3}
-                direction="row"
-                rounded="xl"
-                alignItems="center"
-              >
-                <Text mr={3} fontSize="xl" fontWeight="bold">
-                  {score}
-                </Text>
-                <FontAwesome name="trophy" size={34} color="#FFD700" />
-              </Flex>
-            </HStack>
-
-            <Stack>
-              <Text color="black">
-                {currentQuestionIndex + 1}/{question?.length} Questions
-              </Text>
-              <Progress mt={1} mb={4} value={progressQuestion} />
-            </Stack>
-            <Center>
-              <HStack
-                alignItems="center"
-                space={3}
-                bg="#D9D9D9"
-                rounded="full"
-                pr={6}
-              >
-                <Timer durasi={20} isPlaying={true} />
-                <Text fontWeight="semibold" fontSize="lg" color="black">
-                  Player Remaining : <Text color="#FA9711">20</Text>
-                </Text>
+      <ScrollView style={{ marginTop: 20 }}>
+        {isLoading ? (
+          <View flex={1} mt={200} alignItems={"center"} justifyContent="center">
+            <Spinner size="lg" accessibilityLabel="Loading" />
+          </View>
+        ) : (
+          <>
+            <Box p={4}>
+              <HStack justifyContent="flex-end" alignContent="center">
+                <Flex
+                  bg="gray.100"
+                  px={3}
+                  direction="row"
+                  rounded="xl"
+                  alignItems="center"
+                >
+                  <Text fontSize="xl" fontWeight="bold">
+                    {score.score}
+                  </Text>
+                  <FontAwesome name="trophy" size={34} color="#FFD700" />
+                </Flex>
               </HStack>
-            </Center>
-          </View>
-          <View position={"absolute"} zIndex={0} bottom={10}>
-            <View
-              h={"180px"}
-              bg="#2895F3"
-              rounded="lg"
-              p={3}
-              justifyContent={"center"}
-              w={"300px"}
-            >
-              <Text
-                fontWeight="semibold"
-                fontSize="xl"
-                color={"white"}
-                w={"60%"}
-                lineHeight={"20px"}
-              >
-                {question ? question[currentQuestionIndex]?.question : ""}
-              </Text>
-            </View>
-          </View>
-          <View position={"absolute"} zIndex={1} bottom={0} right={-48}>
-            <Image
-              source={require("../assets/nanya.png")}
-              alt="bg"
-              size={"200px"}
-            />
-          </View>
-        </View>
 
-        <View flex={3} bgColor={"#005EAE"}>
-          <View>
-            <Stack justifyContent="center" space={2}>
-              {/*=================== ANSWERRR============= */}
-              <Box position="relative" height="10" bg="#2895F3">
-                <HStack space={1} position="absolute" ml={16}>
-                  {Array.from({ length: answerLength }, (_, indx) => (
-                    <Box w={10} bg="white" h={10} key={indx}></Box>
-                  ))}
+              <Stack>
+                <Text>
+                  {currentQuestionIndex + 1}/{question?.length} Questions
+                </Text>
+                <Progress mt={1} mb={4} value={progressQuestion} />
+              </Stack>
+              <Center>
+                <HStack
+                  alignItems="center"
+                  space={3}
+                  bg="#D9D9D9"
+                  rounded="full"
+                  pr={6}
+                >
+                  <TimerQuestion
+                    durasi={timer}
+                    isPlaying={true}
+                    isCheckAnswer={checkAnswer}
+                  />
+                  <Text fontSize="lg" fontWeight="semibold">
+                    Player Remaining : <Text color="#FA9711">4</Text>
+                  </Text>
                 </HStack>
+              </Center>
 
-                <HStack space={1} ml={16}>
-                  {input
-                    .split("")
-                    .slice(0, answerLength)
-                    .map((data, idx) => (
-                      <Box
-                        justifyContent="center"
-                        alignItems="center"
-                        h={10}
-                        w={10}
-                        key={idx}
-                      >
-                        {data}
-                      </Box>
-                    ))}
-                </HStack>
-              </Box>
-            </Stack>
-            <View mt={5}>
-              <View flexDir={"row"} justifyContent={"space-evenly"}>
-                <Button
-                  isDisabled={input === ""}
-                  // onPress={handleAnswer}
-                  bg="primary.500"
-                  w={"40"}
-                >
-                  Answer
-                </Button>
-                <Button
-                  onPress={() => navigation.navigate(Routes.Score)}
-                  w={"40"}
-                >
-                  Next Page
-                </Button>
-              </View>
-              <View mt={2}>
-                <CustomKeyboard
-                  onKeyPress={(key: string) => handleKeyPress(key)}
+              <Stack alignItems="center" mt={3}>
+                <Image
+                  resizeMode="contain"
+                  source={require("../assets/nanya.png")}
+                  alt="bg"
+                  size={"100px"}
                 />
-              </View>
-            </View>
-          </View>
-        </View>
-      </Box>
+                <Box rounded="lg" w="full" mt={-2} bg="blue.500" p={3}>
+                  <Text fontSize="lg" fontWeight="semibold" color="white">
+                    {getQuestion ? getQuestion : ""}
+                  </Text>
+                </Box>
+              </Stack>
+
+              {/* ======================= Answer ============================ */}
+
+              <Box px={6} mt={4} bg="blue.500" py={3} rounded="lg">
+                <CodeField
+                  ref={ref}
+                  {...props}
+                  // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+                  value={value}
+                  onChangeText={setValue}
+                  cellCount={CELL_COUNT}
+                  keyboardType="default"
+                  textContentType="none"
+                  renderCell={({ index, symbol, isFocused }) => (
+                    <Text
+                      key={index}
+                      fontSize="2xl"
+                      onLayout={getCellOnLayoutHandler(index)}
+                      style={[styles.cell, isFocused && styles.focusCell]}
+                    >
+                      {symbol || (isFocused ? <Cursor /> : null)}
+                    </Text>
+                  )}
+                />
+              </Box>
+            </Box>
+          </>
+        )}
+      </ScrollView>
     </Layout>
   );
 }
+
+const styles = StyleSheet.create({
+  cell: {
+    width: 40,
+    height: 40,
+    lineHeight: 38,
+    fontSize: 20,
+    borderWidth: 2,
+    borderColor: "#00000030",
+    backgroundColor: "white",
+    textAlign: "center",
+  },
+  focusCell: {
+    borderColor: "#000",
+  },
+});

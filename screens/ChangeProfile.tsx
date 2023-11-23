@@ -30,30 +30,27 @@ export type AvatarData = {
 };
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [selected, setSelected] = useState(null);
   const { isLoading, avatarsData } = useAvatars();
-
   const freeAvatars = avatarsData?.filter(
     (avatar: AvatarData) => avatar.price === 0
   );
-
   const { form, setForm, isUpdating, updateUser } = useUpdateProfile();
-  const [selected, setSelected] = useState(null);
-
   const selectedAvatar = freeAvatars?.find(
     (avatar: AvatarData) => avatar.id === selected
   );
-
   function handleSelected(avatarId: number) {
     setSelected((prevSelected: number) =>
       prevSelected === avatarId ? null : avatarId
     );
     // console.log(selectedAvatar?.id, selectedAvatar?.price);
   }
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   function onSubmit({ username }) {
     const updatedForm = {
@@ -69,100 +66,101 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
     }, 1000);
   }
 
-  if (isLoading)
-    return (
-      <View flex={1} justifyContent="center">
-        <Spinner size="lg" accessibilityLabel="Loading" />
-      </View>
-    );
-
   return (
     <Layout isCenter>
       <View alignItems="center">
         <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       </View>
-      <SimpleGrid columns={4} space={3} alignItems="center">
-        <FlatList
-          data={freeAvatars}
-          numColumns={4}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item: avatar }) => (
-            <Pressable onPress={() => handleSelected(avatar.id)}>
-              <Image
-                alt={avatar.avatar_name}
-                bg={selected === avatar.id ? "red.300" : "transparent"}
-                rounded="lg"
-                size={"sm"}
-                source={{
-                  uri: avatar.avatar_url,
-                }}
-              />
-            </Pressable>
-          )}
-        />
-      </SimpleGrid>
-      <View justifyContent={"center"} alignItems="center" my={3}>
-        <Text fontWeight={"semibold"} fontSize={"md"} color={"#0176E8"}>
-          Choose your starter avatar
-        </Text>
-      </View>
-      <Box px="12">
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              onChangeText={onChange}
-              value={value}
-              onBlur={onBlur}
-              rounded="xl"
-              mt="4"
-              bg="white"
-              _focus={{ bg: "white" }}
-              variant="filled"
-              placeholder="Input your name"
-              InputLeftElement={
-                <Icon
-                  as={
-                    <FontAwesome
-                      name="pencil-square-o"
-                      size={24}
-                      color="black"
+      {isLoading ? (
+        <View justifyContent="center">
+          <Spinner size="lg" accessibilityLabel="Loading" />
+        </View>
+      ) : (
+        <>
+          <SimpleGrid columns={4} space={3} alignItems="center">
+            <FlatList
+              data={freeAvatars}
+              numColumns={4}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item: avatar }) => (
+                <Pressable onPress={() => handleSelected(avatar.id)}>
+                  <Image
+                    alt={avatar.avatar_name}
+                    bg={selected === avatar.id ? "red.300" : "transparent"}
+                    rounded="lg"
+                    size={"sm"}
+                    source={{
+                      uri: avatar.avatar_url,
+                    }}
+                  />
+                </Pressable>
+              )}
+            />
+          </SimpleGrid>
+          <View justifyContent={"center"} alignItems="center" my={3}>
+            <Text fontWeight={"semibold"} fontSize={"md"} color={"#0176E8"}>
+              Choose your starter avatar
+            </Text>
+          </View>
+          <Box px="12">
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  onChangeText={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  rounded="xl"
+                  mt="4"
+                  bg="white"
+                  _focus={{ bg: "white" }}
+                  variant="filled"
+                  placeholder="Input your name"
+                  InputLeftElement={
+                    <Icon
+                      as={
+                        <FontAwesome
+                          name="pencil-square-o"
+                          size={24}
+                          color="black"
+                        />
+                      }
+                      size={5}
+                      ml="2"
+                      color="muted.400"
                     />
                   }
-                  size={5}
-                  ml="2"
-                  color="muted.400"
                 />
-              }
+              )}
+              name="username"
             />
-          )}
-          name="username"
-        />
-        {errors.username && <Text>This is required.</Text>}
+            {errors.username && <Text>This is required.</Text>}
 
-        <Button
-          onPress={handleSubmit(onSubmit)}
-          isLoading={isUpdating}
-          bg="#0176E8"
-          rounded="lg"
-          mt={2}
-        >
-          Continue
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate(Routes.StartGame);
-          }}
-          bg="#0176E8"
-          rounded="lg"
-          mt={2}
-        >
-          go to next page
-        </Button>
-      </Box>
+            <Button
+              onPress={handleSubmit(onSubmit)}
+              isLoading={isUpdating}
+              bg="#0176E8"
+              rounded="lg"
+              mt={2}
+            >
+              Continue
+            </Button>
+            <Button
+              onPress={() => {
+                navigation.navigate(Routes.StartGame);
+              }}
+              bg="#0176E8"
+              rounded="lg"
+              mt={2}
+            >
+              go to next page
+            </Button>
+          </Box>
+        </>
+      )}
     </Layout>
   );
 }

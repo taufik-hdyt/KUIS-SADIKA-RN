@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import UserProfile from "./reducers/TimerReducer";
+import TimerReducer from "./reducers/TimerReducer";
+import ScoreReducer from "./reducers/ScoreReducer";
 
 const rootReducer = combineReducers({
-  user: UserProfile,
+  timer: TimerReducer,
+  score: ScoreReducer,
 });
 
 const store = configureStore({
