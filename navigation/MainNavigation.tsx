@@ -14,7 +14,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import ScoreScreen from "../screens/ScoreScreen";
 import { Button, HStack, Text } from "native-base";
 
-type MainStackParamList = {
+export type MainStackParamList = {
   Login: undefined;
   ChangeProfile: undefined;
   StartGame: undefined;

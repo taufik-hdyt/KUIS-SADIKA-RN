@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "server": "json-server --watch server/avatar.json --host 192.168.18.147"
+    "server": "json-server --watch server/avatar.json --host 192.168.18.87"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^0.19.17",
@@ -28,7 +28,6 @@
     "expo-status-bar": "~1.6.0",
     "expo-web-browser": "~12.3.2",
     "json-server": "^0.17.4",
-    "lodash": "^4.17.21",
     "native-base": "^3.4.28",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
@@ -46,9 +45,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@tanstack/eslint-plugin-query": "^5.8.4",
-    "@types/lodash": "^4.14.202",
-    "redux-persist": "^6.0.0"
+    "@tanstack/eslint-plugin-query": "^5.8.4"
   },
   "private": true
 }

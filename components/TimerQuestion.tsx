@@ -1,9 +1,16 @@
-import { Text } from "native-base";
+import { Text, useToast } from "native-base";
 import { useEffect } from "react";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { useDispatch } from "react-redux";
 import { setScore } from "../redux/reducers/ScoreReducer";
 import { setGoNextQuestion } from "../redux/reducers/TimerReducer";
+import ToastStanding from "./PlayGameStandings";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { Routes } from "../navigation/routes";
+import {
+  MainStackParamList,
+  PlayGameNavigation,
+} from "../navigation/MainNavigation";
 
 interface Props {
   isPlaying: boolean;
@@ -12,8 +19,9 @@ interface Props {
   textSize?: string;
   strokeWidth?: number;
   isCheckAnswer: any;
-  setQuestionIndex: (e:number)=> void
-  questionIndex?: number
+  setQuestionIndex: (e: number) => void;
+  questionIndex?: number;
+  shouldNavigate?: boolean;
 }
 export const TimerQuestion = ({
   durasi,
@@ -22,9 +30,13 @@ export const TimerQuestion = ({
   textSize,
   strokeWidth,
   isCheckAnswer,
-  questionIndex,setQuestionIndex
+  questionIndex,
+  setQuestionIndex,
+  shouldNavigate,
 }: Props) => {
   const dispatch = useDispatch();
+  const toast = useToast();
+  const navigate = useNavigation<NavigationProp<MainStackParamList>>();
   return (
     <CountdownCircleTimer
       isPlaying={isPlaying}
@@ -34,8 +46,27 @@ export const TimerQuestion = ({
       colorsTime={[durasi, durasi * 0.5, 0]}
       strokeWidth={strokeWidth ? strokeWidth : 8}
       onComplete={() => {
-        setQuestionIndex(questionIndex + 1)
-        return { shouldRepeat: true, delay: .5 }
+        if (!shouldNavigate) {
+          setQuestionIndex(questionIndex + 1);
+          toast.show({
+            placement: "bottom",
+            render: ({ id }) => {
+              return (
+                <ToastStanding
+                  id={id}
+                  title={"Current standings"}
+                  variant={"top-accent"}
+                  status="info"
+                />
+              );
+            },
+          });
+        }
+        if (shouldNavigate) {
+          navigate.navigate(Routes.Score);
+        }
+
+        return { shouldRepeat: shouldNavigate ? false : true, delay: 0.5 };
       }}
     >
       {({ remainingTime }) => {

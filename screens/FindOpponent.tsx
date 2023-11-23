@@ -8,9 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { setGoNext, setStatus } from "../redux/reducers/TimerReducer";
 import { useFocusEffect } from "@react-navigation/native";
+import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
   const { timer, goNext } = useSelector((time: RootState) => time.timer);
+  const { userData } = useUserProfile();
 
   const dispatch = useDispatch();
 
@@ -55,17 +57,16 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
             />
           </Box>
           <Text mt={10} fontSize="xl" fontWeight="semibold" textAlign="center">
-            Finding Opponent
+            Match Found
           </Text>
           <Text fontSize="xl" fontWeight="semibold" textAlign="center">
-            <Text color="#0176E8">4</Text>/5
+            <Text color="#0176E8">5</Text>/5
           </Text>
         </Box>
 
         <Stack space={2} alignItems="center" mt={8}>
-          {Array.from({ length: 5 }, (_, index) => (
+          <View>
             <HStack
-              key={index}
               borderColor="white"
               borderStyle="solid"
               borderWidth="2px"
@@ -74,17 +75,45 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
               rounded="lg"
               bg="gray.600"
               alignItems="center"
+              space={3}
             >
+              <Text color="white">1</Text>
               <Image
-                style={{ width: 50, height: 50 }}
+                borderRadius={50}
+                resizeMode="contain"
+                style={{ width: 45, height: 45 }}
                 alt="profile"
-                source={require("../assets/avatar.png")}
+                source={{ uri: userData?.avatar }}
               />
               <Text fontSize="lg" color="white" fontWeight="semibold">
-                Molusca_Bertulang
+                {userData?.username}
               </Text>
             </HStack>
-          ))}
+            {Array.from({ length: 4 }, (_, index) => (
+              <HStack
+                key={index}
+                borderColor="white"
+                borderStyle="solid"
+                borderWidth="2px"
+                p={1.5}
+                space={3}
+                w="280px"
+                rounded="lg"
+                bg="gray.600"
+                alignItems="center"
+              >
+                <Text color="white">{index + 2}</Text>
+                <Image
+                  style={{ width: 50, height: 50 }}
+                  alt="profile"
+                  source={require("../assets/avatar.png")}
+                />
+                <Text fontSize="lg" color="white" fontWeight="semibold">
+                  Molusca_Bertulang
+                </Text>
+              </HStack>
+            ))}
+          </View>
         </Stack>
         <Button
           w="100px"

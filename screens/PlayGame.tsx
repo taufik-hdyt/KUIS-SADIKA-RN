@@ -31,6 +31,7 @@ import { PlayGameNavigation } from "../navigation/MainNavigation";
 import { setAnswer, setScore } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
 import { setGoNextQuestion, setTimer } from "../redux/reducers/TimerReducer";
+import ToastStanding from "../components/PlayGameStandings";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
   const { timer, goNextQuestion } = useSelector(
@@ -70,10 +71,23 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   // }, []);
 
   useEffect(() => {
-     if (checkAnswer) {
+    if (checkAnswer) {
       dispatch(setAnswer(value.toLowerCase()));
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setValue("");
+      toast.show({
+        placement: "bottom",
+        render: ({ id }) => {
+          return (
+            <ToastStanding
+              id={id}
+              title={"Current standings"}
+              variant={"top-accent"}
+              status="info"
+            />
+          );
+        },
+      });
       if (question?.length === currentQuestionIndex + 1) {
         navigation.navigate(Routes.Score);
         setCurrentQuestionIndex(0);
@@ -85,8 +99,6 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
       }
     }
   }, [value.toLowerCase(), getAnswer, currentQuestionIndex]);
-
-  console.log(timer);
 
   return (
     <Layout>
@@ -130,6 +142,9 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   <TimerQuestion
                     setQuestionIndex={setCurrentQuestionIndex}
                     questionIndex={currentQuestionIndex}
+                    shouldNavigate={
+                      question?.length === currentQuestionIndex + 1
+                    }
                     durasi={timer}
                     isPlaying={true}
                     isCheckAnswer={checkAnswer}

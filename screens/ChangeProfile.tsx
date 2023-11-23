@@ -9,6 +9,7 @@ import {
   Spinner,
   Text,
   View,
+  useToast,
 } from "native-base";
 import { FlatList } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -19,6 +20,7 @@ import { Pressable } from "react-native";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import { useForm, Controller } from "react-hook-form";
 import { Routes } from "../navigation/routes";
+import ToastStanding from "../components/PlayGameStandings";
 
 export type AvatarData = {
   id: number;
@@ -30,6 +32,7 @@ export type AvatarData = {
 };
 
 export default function ChangeProfile({ navigation }: ProfileNavigation) {
+  const toast = useToast();
   const [selected, setSelected] = useState(null);
   const { isLoading, avatarsData } = useAvatars();
   const freeAvatars = avatarsData?.filter(
@@ -158,6 +161,28 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
             >
               go to next page
             </Button>
+            {/* <Button
+              onPress={() => {
+                toast.show({
+                  placement: "bottom",
+                  render: ({ id }) => {
+                    return (
+                      <ToastStanding
+                        id={id}
+                        title={"Current standings"}
+                        variant={"top-accent"}
+                        status="info"
+                      />
+                    );
+                  },
+                });
+              }}
+              bg="#0176E8"
+              rounded="lg"
+              mt={2}
+            >
+              HEHE
+            </Button> */}
           </Box>
         </>
       )}
