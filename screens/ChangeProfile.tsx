@@ -161,10 +161,11 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
             >
               go to next page
             </Button>
-            {/* <Button
+            <Button
               onPress={() => {
                 toast.show({
                   placement: "bottom",
+                  duration: .5,
                   render: ({ id }) => {
                     return (
                       <ToastStanding
@@ -182,7 +183,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
               mt={2}
             >
               HEHE
-            </Button> */}
+            </Button>
           </Box>
         </>
       )}

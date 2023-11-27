@@ -66,9 +66,6 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     setValue,
   });
 
-  // useEffect(() => {
-
-  // }, []);
 
   useEffect(() => {
     if (checkAnswer) {
@@ -148,6 +145,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                     durasi={timer}
                     isPlaying={true}
                     isCheckAnswer={checkAnswer}
+                    correctAnswer={getAnswer}
                   />
                   <Text fontSize="lg" fontWeight="semibold">
                     Player Remaining : <Text color="#FA9711">4</Text>
