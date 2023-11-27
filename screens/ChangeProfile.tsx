@@ -161,7 +161,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
             >
               go to next page
             </Button>
-            {/* <Button
+            <Button
               onPress={() => {
                 toast.show({
                   placement: "bottom",
@@ -171,7 +171,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
                         id={id}
                         title={"Current standings"}
                         variant={"top-accent"}
-                        status="info"
+                        status="success"
                       />
                     );
                   },
@@ -182,7 +182,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
               mt={2}
             >
               HEHE
-            </Button> */}
+            </Button>
           </Box>
         </>
       )}

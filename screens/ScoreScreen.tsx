@@ -1,27 +1,38 @@
 import { Button, HStack, Image, Text, View } from "native-base";
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import { Routes } from "../navigation/routes";
 import { setStatus } from "../redux/reducers/TimerReducer";
+import { RootState } from "../redux/store";
+import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function ScoreScreen({ navigation }) {
   const dispatch = useDispatch();
+  const { userData } = useUserProfile();
+  // const { status } = useSelector((time: RootState) => time.timer);
+  useEffect(() => {
+    setStatus("finished");
+  }, []);
   return (
     <Layout isCenter>
       <View>
         <Image
-          alt="avatarwin"
           mx="auto"
-          source={require("../assets/avatarwin.png")}
+          bgColor={"#00EEFA"}
+          borderRadius={100}
+          resizeMode="cover"
+          alt="profile"
+          source={{ uri: userData?.avatar }}
+          size={"md"}
         />
         <Text fontWeight="semibold" fontSize="lg" textAlign="center">
-          Molusca_Bertulang
+          {userData.username}
         </Text>
         <HStack mt={10} justifyContent="space-evenly" px={10}>
           <Button
             onPress={() => {
-              dispatch(setStatus("finished"));
+              dispatch(setStatus("idle"));
               navigation.navigate(Routes.StartGame);
             }}
             bg="#CF0A0A"
