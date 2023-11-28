@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserApi } from "../axios/axiosApi";
 import { Toast } from "native-base";
-import { useUser } from "@clerk/clerk-expo"
+import { useUser } from "@clerk/clerk-expo";
 
 type UserData = {
-    avatar: string;
-    email: string;
-    id: string;
-    username: string;
-  };;
+  avatar: string;
+  email: string;
+  id: string;
+  username: string;
+};
 
 export function useUserProfile() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -25,9 +25,9 @@ export function useUserProfile() {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const { data } = await getUserApi.get(`/`);
+        const { data } = await getUserApi.get(`/${userEmail}`);
         // console.log("log from useUserProfile", data);
-        
+
         return data as UserData;
       } catch (err) {
         Toast.show({

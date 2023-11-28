@@ -172,7 +172,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
                         id={id}
                         title={"Current standings"}
                         variant={"top-accent"}
-                        status="info"
+                        status="success"
                       />
                     );
                   },

@@ -58,6 +58,7 @@ export const TimerQuestion = ({
                   id={id}
                   title={"Current standings"}
                   variant={"top-accent"}
+
                   status="info"
                   correctAnswer={correctAnswer}
                 />

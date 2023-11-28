@@ -4,6 +4,7 @@ import {
   Flex,
   HStack,
   Image,
+  Pressable,
   Progress,
   Spinner,
   Stack,
@@ -17,7 +18,7 @@ import Layout from "../components/Layout";
 import { FontAwesome } from "@expo/vector-icons";
 import { Routes } from "../navigation/routes";
 
-import { ScrollView, StyleSheet } from "react-native";
+import { Button, ScrollView, StyleSheet } from "react-native";
 import {
   CodeField,
   Cursor,
@@ -30,7 +31,11 @@ import { useQuestions } from "../hooks/useQuestions";
 import { PlayGameNavigation } from "../navigation/MainNavigation";
 import { setAnswer, setScore } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
-import { setGoNextQuestion, setTimer } from "../redux/reducers/TimerReducer";
+import {
+  setGoNextQuestion,
+  setStatus,
+  setTimer,
+} from "../redux/reducers/TimerReducer";
 import ToastStanding from "../components/PlayGameStandings";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
@@ -42,7 +47,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   console.log("answer => ", score, "go next: " + goNextQuestion);
 
   const dispatch = useDispatch();
-
+  const [timerQuestionKey, setTimerQuestionKey] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [value, setValue] = useState<string>("");
 
@@ -66,25 +71,27 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     setValue,
   });
 
-
   useEffect(() => {
     if (checkAnswer) {
+      setTimerQuestionKey((prevKey) => prevKey + 1);
       dispatch(setAnswer(value.toLowerCase()));
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setValue("");
-      toast.show({
-        placement: "bottom",
-        render: ({ id }) => {
-          return (
-            <ToastStanding
-              id={id}
-              title={"Current standings"}
-              variant={"top-accent"}
-              status="info"
-            />
-          );
-        },
-      });
+      if (question?.length !== currentQuestionIndex + 1) {
+        toast.show({
+          placement: "bottom",
+          render: ({ id }) => {
+            return (
+              <ToastStanding
+                id={id}
+                title={"Current standings"}
+                variant={"top-accent"}
+                status="success"
+              />
+            );
+          },
+        });
+      }
       if (question?.length === currentQuestionIndex + 1) {
         navigation.navigate(Routes.Score);
         setCurrentQuestionIndex(0);
@@ -145,7 +152,9 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                     durasi={timer}
                     isPlaying={true}
                     isCheckAnswer={checkAnswer}
+
                     correctAnswer={getAnswer}
+                    key={timerQuestionKey}
                   />
                   <Text fontSize="lg" fontWeight="semibold">
                     Player Remaining : <Text color="#FA9711">4</Text>
