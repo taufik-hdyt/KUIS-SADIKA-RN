@@ -22,6 +22,7 @@ interface Props {
   setQuestionIndex: (e: number) => void;
   questionIndex?: number;
   shouldNavigate?: boolean;
+  correctAnswer?: string
 }
 export const TimerQuestion = ({
   durasi,
@@ -33,6 +34,7 @@ export const TimerQuestion = ({
   questionIndex,
   setQuestionIndex,
   shouldNavigate,
+  correctAnswer
 }: Props) => {
   const dispatch = useDispatch();
   const toast = useToast();
@@ -56,7 +58,9 @@ export const TimerQuestion = ({
                   id={id}
                   title={"Current standings"}
                   variant={"top-accent"}
-                  status="success"
+
+                  status="info"
+                  correctAnswer={correctAnswer}
                 />
               );
             },

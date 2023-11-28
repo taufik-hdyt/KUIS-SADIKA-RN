@@ -165,6 +165,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
               onPress={() => {
                 toast.show({
                   placement: "bottom",
+                  duration: .5,
                   render: ({ id }) => {
                     return (
                       <ToastStanding

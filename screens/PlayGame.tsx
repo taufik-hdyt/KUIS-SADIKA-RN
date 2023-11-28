@@ -152,6 +152,8 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                     durasi={timer}
                     isPlaying={true}
                     isCheckAnswer={checkAnswer}
+
+                    correctAnswer={getAnswer}
                     key={timerQuestionKey}
                   />
                   <Text fontSize="lg" fontWeight="semibold">

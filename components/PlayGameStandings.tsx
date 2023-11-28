@@ -1,15 +1,10 @@
 import {
   Alert,
-  Button,
-  Center,
-  CloseIcon,
+  Avatar,
+  Box,
   HStack,
-  IconButton,
-  Image,
+  Stack,
   Text,
-  VStack,
-  View,
-  useToast,
 } from "native-base";
 import { useUserProfile } from "../hooks/useUserProfile";
 
@@ -18,6 +13,7 @@ type ToastStandingProps = {
   title: string;
   variant?: string;
   status?: string;
+  correctAnswer?: string
 };
 
 export const ToastStanding = ({
@@ -25,97 +21,60 @@ export const ToastStanding = ({
   title,
   variant,
   status,
+  correctAnswer
 }: ToastStandingProps) => {
   const { isLoading, userData } = useUserProfile();
   return (
     <Alert
-      maxWidth="90%"
-      height="660px"
+      minW="300px"
       alignSelf="center"
       flexDirection="row"
       status={status ? status : "info"}
       variant={variant}
     >
-      <VStack w="100%">
-        <HStack alignItems="center" justifyContent={"center"}>
-          <Text
-            fontSize="md"
-            fontWeight="medium"
-            color={
-              variant === "solid"
-                ? "lightText"
-                : variant !== "outline"
-                ? "darkText"
-                : null
-            }
-          >
-            {title}
-          </Text>
-        </HStack>
-
-        <View mx={2}>
-          {/* <Text
-            color={
-              variant === "solid"
-                ? "lightText"
-                : variant !== "outline"
-                ? "darkText"
-                : null
-            }
-          >
-            {description}
-          </Text> */}
-          <View>
+     <Box w="full">
+      <Box p={2}>
+        <Text fontWeight="semibold" fontSize="lg" textAlign="center">
+          Answer Results
+        </Text>
+        <Text
+          py={1}
+          rounded="lg"
+          color="white"
+          bg="green.400"
+          w="200px"
+          mb={3}
+          textAlign="center"
+          mx="auto"
+        >
+          Correct Answer : <Text fontWeight="semibold">{correctAnswer}</Text>
+        </Text>
+        <Stack space={2}>
+          {Array.from({ length: 3 }, (_, idx) => (
             <HStack
-              borderColor="white"
-              borderStyle="solid"
-              borderWidth="2px"
-              p={1.5}
-              w="280px"
-              rounded="lg"
-              bg="gray.600"
-              alignItems="center"
+              key={idx}
               space={3}
+              alignItems="center"
+              p={2}
+              bg="blue.100"
+              rounded="lg"
             >
-              <Text color="white">1</Text>
-              <Image
-                borderRadius={50}
-                resizeMode="contain"
-                style={{ width: 45, height: 45 }}
-                alt="profile"
-                source={{ uri: userData?.avatar }}
+              <Avatar
+                source={{
+                  uri: "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+                }}
               />
-              <Text fontSize="lg" color="white" fontWeight="semibold">
-                {userData?.username}
-              </Text>
-            </HStack>
-            {Array.from({ length: 4 }, (_, index) => (
-              <HStack
-                key={index}
-                borderColor="white"
-                borderStyle="solid"
-                borderWidth="2px"
-                p={1.5}
-                space={3}
-                w="280px"
-                rounded="lg"
-                bg="gray.600"
-                alignItems="center"
-              >
-                <Text color="white">{index + 2}</Text>
-                <Image
-                  style={{ width: 50, height: 50 }}
-                  alt="profile"
-                  source={require("../assets/avatar.png")}
-                />
-                <Text fontSize="lg" color="white" fontWeight="semibold">
-                  Molusca_Bertulang
+              <Stack>
+                <Text fontWeight="semibold" fontSize="lg" textAlign="center">
+                  Player 1
                 </Text>
-              </HStack>
-            ))}
-          </View>
-        </View>
-      </VStack>
+                <Text textAlign="center">Answer : test</Text>
+              </Stack>
+            </HStack>
+          ))}
+        </Stack>
+      </Box>
+    </Box>
     </Alert>
   );
 };
