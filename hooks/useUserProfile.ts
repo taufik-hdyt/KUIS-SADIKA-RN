@@ -15,6 +15,7 @@ export function useUserProfile() {
   if (isLoaded && !isSignedIn) {
     console.log("not signed in");
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userEmail = user?.primaryEmailAddress.emailAddress;
   // ${userEmail}
   const {
@@ -25,7 +26,7 @@ export function useUserProfile() {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const { data } = await getUserApi.get(`/${userEmail}`);
+        const { data } = await getUserApi.get("/");
         // console.log("log from useUserProfile", data);
 
         return data as UserData;

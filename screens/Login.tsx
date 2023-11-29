@@ -1,13 +1,11 @@
-import {  Button, Image, View } from "native-base";
+import { Button, Image, View } from "native-base";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Layout from "../components/Layout";
-import { Routes } from "../navigation/routes";
-import { LoginNavigation } from "../navigation/MainNavigation";
 import { useWarmUpBrowser } from "../hooks/useWarmUpBrowser";
 import { useOAuth } from "@clerk/clerk-expo";
 
-export default function Login({ navigation }: LoginNavigation) {
+export default function Login() {
   useWarmUpBrowser();
 
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });

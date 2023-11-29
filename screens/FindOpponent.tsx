@@ -1,14 +1,16 @@
-import { Box, Button, HStack, Image, View, Stack, Text } from "native-base";
-import React, { useCallback, useEffect, useState } from "react";
-import Layout from "../components/Layout";
-import { Routes } from "../navigation/routes";
-import { FindOpponentNavigation } from "../navigation/MainNavigation";
-import { Timer } from "../components/Timer";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { setGoNext, setStatus } from "../redux/reducers/TimerReducer";
 import { useFocusEffect } from "@react-navigation/native";
+import { Box, Button, HStack, Image, Stack, Text, View } from "native-base";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Layout from "../components/Layout";
+import { Timer } from "../components/Timer";
 import { useUserProfile } from "../hooks/useUserProfile";
+import { FindOpponentNavigation } from "../navigation/MainNavigation";
+import { Routes } from "../navigation/routes";
+import { setStatus } from "../redux/reducers/TimerReducer";
+import { RootState } from "../redux/store";
+import { socket } from "../socket/socket";
+import { setPlayer } from "../redux/reducers/PlayersReducer";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
   const { timer, goNext } = useSelector((time: RootState) => time.timer);
@@ -20,28 +22,38 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
 
   const [find, setFind] = useState<boolean>(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log(
-        "in findOpponent => ",
-        "mm timer: " + timer,
-        "gonext: " + goNext
-      );
-      setFind(true);
-      if (goNext) {
-        navigation.replace(Routes.PlayGame);
-      }
-      return () => {
-        dispatch(setStatus("playing"));
-        setFind(false);
-        console.log(
-          "leaving findOpponent => ",
-          "mm timer: " + timer,
-          "gonext: " + goNext
-        );
-      };
-    }, [goNext])
-  );
+  useEffect(() => {
+    socket.on("findingMatch", ({ opponentsInMatchmaking }) => {
+      console.log("data: ", opponentsInMatchmaking);
+      dispatch(setPlayer(opponentsInMatchmaking));
+    });
+  }, [socket, dispatch]);
+
+  const playerList = useSelector((state: RootState) => state.player);
+  console.log("playerList: ", playerList);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log(
+  //       "in findOpponent => ",
+  //       "mm timer: " + timer,
+  //       "gonext: " + goNext
+  //     );
+  //     setFind(true);
+  //     // if (goNext) {
+  //     //   navigation.replace(Routes.PlayGame);
+  //     // }
+  //     return () => {
+  //       dispatch(setStatus("playing"));
+  //       setFind(false);
+  //       console.log(
+  //         "leaving findOpponent => ",
+  //         "mm timer: " + timer,
+  //         "gonext: " + goNext
+  //       );
+  //     };
+  //   }, [goNext])
+  // );
 
   return (
     <Layout>
@@ -66,32 +78,9 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
 
         <Stack space={2} alignItems="center" mt={8}>
           <View>
-            <HStack
-              borderColor="white"
-              borderStyle="solid"
-              borderWidth="2px"
-              p={1.5}
-              w="280px"
-              rounded="lg"
-              bg="gray.600"
-              alignItems="center"
-              space={3}
-            >
-              <Text color="white">1</Text>
-              <Image
-                borderRadius={50}
-                resizeMode="contain"
-                style={{ width: 45, height: 45 }}
-                alt="profile"
-                source={{ uri: userData?.avatar }}
-              />
-              <Text fontSize="lg" color="white" fontWeight="semibold">
-                {userData?.username}
-              </Text>
-            </HStack>
-            {Array.from({ length: 4 }, (_, index) => (
+            {playerList.player.map((player, i) => (
               <HStack
-                key={index}
+                key={player.userId}
                 borderColor="white"
                 borderStyle="solid"
                 borderWidth="2px"
@@ -102,14 +91,14 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
                 bg="gray.600"
                 alignItems="center"
               >
-                <Text color="white">{index + 2}</Text>
+                <Text color="white">{i + 1}</Text>
                 <Image
                   style={{ width: 50, height: 50 }}
                   alt="profile"
-                  source={require("../assets/avatar.png")}
+                  source={{ uri: player.userAvatar }}
                 />
                 <Text fontSize="lg" color="white" fontWeight="semibold">
-                  Molusca_Bertulang
+                  {player.userName}
                 </Text>
               </HStack>
             ))}

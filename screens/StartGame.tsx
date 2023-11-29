@@ -20,11 +20,10 @@ import { Routes } from "../navigation/routes";
 import { setStatus } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { resetScoreState } from "../redux/reducers/ScoreReducer";
+import { socket } from "../socket/socket";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
-  const { status } = useSelector(
-    (state: RootState) => state.timer
-  );
+  const { status } = useSelector((state: RootState) => state.timer);
   const dispatch = useDispatch();
 
   const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
@@ -32,6 +31,20 @@ export default function StartGame({ navigation }: StartGameNavigation) {
   // const { signOut, isLoaded, isSignedIn } = useAuth();
 
   const { isLoading, userData } = useUserProfile();
+
+  function handleStartGame() {
+    dispatch(setStatus("matchmaking"));
+    socket.emit("matchmaking", {
+      userName: userData?.username,
+    });
+    navigation.navigate(Routes.FindOpponent);
+  }
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+  }, []);
 
   useEffect(() => {
     if (status === "finished" || "idle") {
@@ -129,10 +142,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             <Box alignItems="center" mt={16}>
               <Button
                 size="lg"
-                onPress={() => {
-                  dispatch(setStatus("matchmaking"));
-                  navigation.navigate(Routes.FindOpponent);
-                }}
+                onPress={handleStartGame}
                 bg="#2075B8"
                 px={16}
                 rounded="xl"
