@@ -7,7 +7,7 @@ import { Timer } from "../components/Timer";
 import { useUserProfile } from "../hooks/useUserProfile";
 import { FindOpponentNavigation } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
-import { setStatus } from "../redux/reducers/TimerReducer";
+import { setStatus, setTimer } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { socket } from "../socket/socket";
 import { setPlayer } from "../redux/reducers/PlayersReducer";
@@ -21,6 +21,17 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
   // console.log("from findOpponent", timer);
 
   const [find, setFind] = useState<boolean>(false);
+
+  useEffect(() => {
+    socket.on("findingMatchCountdown", ({ time }) => {
+      console.log(time);
+      
+      dispatch(setTimer(time));
+    });
+    return () => {
+      socket.off("findingMatchCountdown");
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("findingMatch", ({ opponentsInMatchmaking }) => {
@@ -65,7 +76,7 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
               textSize="3xl"
               size={100}
               durasi={timer}
-              isPlaying={find}
+              isPlaying={false}
             />
           </Box>
           <Text mt={10} fontSize="xl" fontWeight="semibold" textAlign="center">
@@ -93,7 +104,7 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
               >
                 <Text color="white">{i + 1}</Text>
                 <Image
-                  style={{ width: 50, height: 50 }}
+                  style={{ width: 50, height: 50, borderRadius: 50 }}
                   alt="profile"
                   source={{ uri: player.userAvatar }}
                 />

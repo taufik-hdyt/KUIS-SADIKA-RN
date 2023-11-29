@@ -29,24 +29,18 @@ export const Time = createSlice({
         state.timer = null;
         state.goNext = false;
       } else if (state.status === "matchmaking") {
-        state.timer = 10;
         state.goNext = false;
       } else if (state.status === "playing") {
         state.goNext = false;
-        state.timer = 30;
       }
     },
     setGoNext: (state, action) => {
-      state.goNext = action.payload;
-    },
-    setGoNextQuestion: (state, action) => {
       state.goNext = action.payload;
     },
     resetState: () => initialState,
   },
 });
 
-export const { setTimer, setStatus, setGoNext, setGoNextQuestion } =
-  Time.actions;
+export const { setTimer, setStatus, setGoNext } = Time.actions;
 
 export default Time.reducer;

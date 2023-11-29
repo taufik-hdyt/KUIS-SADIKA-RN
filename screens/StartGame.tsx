@@ -36,6 +36,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
     dispatch(setStatus("matchmaking"));
     socket.emit("matchmaking", {
       userName: userData?.username,
+      userAvatar: userData?.avatar,
     });
     navigation.navigate(Routes.FindOpponent);
   }
