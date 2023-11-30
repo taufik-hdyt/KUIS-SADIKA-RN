@@ -1,13 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface QuestionType {
+  id: number;
+  question: string;
+  answer: string;
+}
+
 export interface ScoreTypes {
-  score: number;
-  answer: string[];
+  currentUserScore: number;
+  currentUserAnswer: string[];
+  questions: QuestionType[];
 }
 
 const initialState = {
-  score: 0,
-  answer: [],
+  currentUserScore: 0,
+  currentUserAnswer: [],
+  questions: [],
 } as ScoreTypes;
 
 export const Score = createSlice({
@@ -15,15 +23,18 @@ export const Score = createSlice({
   initialState: initialState,
   reducers: {
     setScore: (state, action) => {
-      state.score = state.score + action.payload;
+      state.currentUserScore = state.currentUserScore + action.payload;
     },
     setAnswer: (state, action) => {
-      state.answer = [...state.answer, action.payload];
+      state.currentUserAnswer = [...state.currentUserAnswer, action.payload];
+    },
+    setQuestion: (state, action) => {
+      state.questions = action.payload;
     },
     resetScoreState: () => initialState,
   },
 });
 
-export const { setAnswer, setScore, resetScoreState } = Score.actions;
+export const { setAnswer, setScore, resetScoreState, setQuestion } = Score.actions;
 
 export default Score.reducer;

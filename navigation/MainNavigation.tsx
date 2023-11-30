@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import {
   createStackNavigator,
   StackScreenProps,
@@ -49,7 +50,7 @@ export default function MainNavigation() {
   return (
     <Stack.Navigator initialRouteName={Routes.Login}>
       {isLoaded && !isSignedIn ? (
-        <Stack.Group >
+        <Stack.Group>
           <Stack.Screen
             options={{
               headerShown: false,

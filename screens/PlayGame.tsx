@@ -42,9 +42,11 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const { timer, goNextQuestion } = useSelector(
     (state: RootState) => state.timer
   );
+  const { questions } = useSelector((state: RootState) => state.score);
+  // console.log(questions);
 
   const score = useSelector((state: RootState) => state.score);
-  console.log("answer => ", score, "go next: " + goNextQuestion);
+  // console.log("answer => ", score, "go next: " + goNextQuestion);
 
   const dispatch = useDispatch();
   const [timerQuestionKey, setTimerQuestionKey] = useState(0);
@@ -53,8 +55,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
 
   const toast = useToast();
 
-  const { questionsData, isLoading } = useQuestions();
-  const question = questionsData;
+  const question = questions;
 
   const getQuestion = question?.[currentQuestionIndex]?.question;
   const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase();
@@ -107,7 +108,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   return (
     <Layout>
       <ScrollView style={{ marginTop: 20 }}>
-        {isLoading ? (
+        {!questions ? (
           <View flex={1} mt={200} alignItems={"center"} justifyContent="center">
             <Spinner size="lg" accessibilityLabel="Loading" />
           </View>
@@ -123,7 +124,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   alignItems="center"
                 >
                   <Text fontSize="xl" fontWeight="bold">
-                    {score.score}
+                    {score.currentUserScore}
                   </Text>
                   <FontAwesome name="trophy" size={34} color="#FFD700" />
                 </Flex>
@@ -149,10 +150,9 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                     shouldNavigate={
                       question?.length === currentQuestionIndex + 1
                     }
-                    durasi={timer}
+                    durasi={30}
                     isPlaying={true}
                     isCheckAnswer={checkAnswer}
-
                     correctAnswer={getAnswer}
                     key={timerQuestionKey}
                   />
