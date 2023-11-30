@@ -2,11 +2,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import TimerReducer from "./reducers/TimerReducer";
 import ScoreReducer from "./reducers/ScoreReducer";
 import PlayersReducer from "./reducers/PlayersReducer";
+import FinalResultReducer from "./reducers/FinalResultReducer";
 
 const rootReducer = combineReducers({
   timer: TimerReducer,
   score: ScoreReducer,
   player: PlayersReducer,
+  finalResult: FinalResultReducer,
 });
 
 const store = configureStore({
