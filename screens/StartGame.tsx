@@ -48,7 +48,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
     navigation.navigate(Routes.FindOpponent);
   }
 
-  useEffect(() => {
+  useEffect(() => {;
     socket.on("connect", () => {
       console.log("connected");
     });
@@ -152,10 +152,12 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             </Box>
 
             <Box alignItems="center">
-              <QuizAnimation />
+              {/* <QuizAnimation /> */}
               {/* <QuizAnimation1 /> */}
             </Box>
-            <Box alignItems="center">
+
+            
+            <Box mt={"2/6"} alignItems="center">
               <Button
                 size="lg"
                 onPress={handleStartGame}
