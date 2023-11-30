@@ -1,58 +1,71 @@
-// CustomKeyboard.js
-import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Box } from "native-base";
+import React, { Dispatch,SetStateAction } from "react";
+import { Text, StyleSheet } from "react-native";
 
-const CustomKeyboard = ({ onKeyPress }) => {
-  const rows = [
-    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-    ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
-    ["Z", "X", "C", "V", "B", "N", "M","⌫"],
-  ];
-
-  return (
-    <View style={styles.keyboardContainer}>
-      {rows.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.row}>
-          {row.map((key) => (
-            <TouchableOpacity
-              key={key}
-              style={styles.key}
-              onPress={() => onKeyPress(key)}
-            >
-              <Text style={styles.keyText}>{key}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
-    </View>
-  );
-};
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from "react-native-confirmation-code-field";
 
 const styles = StyleSheet.create({
-  keyboardContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginVertical: 3
-  },
-  key: {
-    padding: 8,
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 2,
-    backgroundColor: "white",
-    minWidth: 30,
-    
-  },
-  keyText: {
-    fontSize: 18,
+  cell: {
+    width: 40,
+    height: 40,
+    lineHeight: 38,
+    fontSize: 24,
+    borderWidth: 2,
+    borderColor: "#00000030",
     textAlign: "center",
+    backgroundColor: "white",
+  },
+  focusCell: {
+    borderColor: "#fff",
   },
 });
 
-export default CustomKeyboard;
+
+interface IProps {
+  answerLength?: number;
+  value: string;
+  setValue: Dispatch<SetStateAction<string>>
+}
+const InputAnswer = ({ setValue, answerLength, value }: IProps) => {
+
+
+
+
+  const CELL_COUNT = answerLength;
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
+
+  return (
+    <Box>
+      <CodeField
+        ref={ref}
+        {...props}
+        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+        value={value}
+        onChangeText={setValue}
+        cellCount={CELL_COUNT}
+        keyboardType="default"
+        textContentType="oneTimeCode"
+        renderCell={({ index, symbol, isFocused }) => (
+          <Text
+            key={index}
+            style={[styles.cell, isFocused && styles.focusCell]}
+            onLayout={getCellOnLayoutHandler(index)}
+          >
+            {symbol || (isFocused ? <Cursor /> : null)}
+          </Text>
+        )}
+      />
+    </Box>
+  );
+};
+
+export default InputAnswer;

@@ -4,7 +4,6 @@ import {
   Flex,
   HStack,
   Image,
-  Pressable,
   Progress,
   Spinner,
   Stack,
@@ -18,36 +17,19 @@ import Layout from "../components/Layout";
 import { FontAwesome } from "@expo/vector-icons";
 import { Routes } from "../navigation/routes";
 
-import { Button, ScrollView, StyleSheet } from "react-native";
-import {
-  CodeField,
-  Cursor,
-  useBlurOnFulfill,
-  useClearByFocusCell,
-} from "react-native-confirmation-code-field";
+import { ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { TimerQuestion } from "../components/TimerQuestion";
-import { useQuestions } from "../hooks/useQuestions";
 import { PlayGameNavigation } from "../navigation/MainNavigation";
-import { setAnswer, setScore } from "../redux/reducers/ScoreReducer";
+import { setAnswer } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
-import {
-  setGoNextQuestion,
-  setStatus,
-  setTimer,
-} from "../redux/reducers/TimerReducer";
 import ToastStanding from "../components/PlayGameStandings";
+import InputAnswer from "../components/Keyboard";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
-  const { timer, goNextQuestion } = useSelector(
-    (state: RootState) => state.timer
-  );
   const { questions } = useSelector((state: RootState) => state.score);
-  // console.log(questions);
 
   const score = useSelector((state: RootState) => state.score);
-  // console.log("answer => ", score, "go next: " + goNextQuestion);
-
   const dispatch = useDispatch();
   const [timerQuestionKey, setTimerQuestionKey] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -56,22 +38,12 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const toast = useToast();
 
   const question = questions;
-
   const getQuestion = question?.[currentQuestionIndex]?.question;
   const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
   const progressQuestion = (currentQuestionIndex + 1) * 20;
-
-  const CELL_COUNT = answerLength;
   const checkAnswer = value.toLowerCase() === getAnswer;
-
-  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
-    value,
-    setValue,
-  });
-
   useEffect(() => {
     if (checkAnswer) {
       setTimerQuestionKey((prevKey) => prevKey + 1);
@@ -179,25 +151,10 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
               {/* ======================= Answer ============================ */}
 
               <Box px={6} mt={4} bg="blue.500" py={3} rounded="lg">
-                <CodeField
-                  ref={ref}
-                  {...props}
-                  // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+                <InputAnswer
+                  setValue={setValue}
                   value={value}
-                  onChangeText={setValue}
-                  cellCount={CELL_COUNT}
-                  keyboardType="default"
-                  textContentType="none"
-                  renderCell={({ index, symbol, isFocused }) => (
-                    <Text
-                      key={index}
-                      fontSize="2xl"
-                      onLayout={getCellOnLayoutHandler(index)}
-                      style={[styles.cell, isFocused && styles.focusCell]}
-                    >
-                      {symbol || (isFocused ? <Cursor /> : null)}
-                    </Text>
-                  )}
+                  answerLength={answerLength}
                 />
               </Box>
             </Box>
@@ -207,19 +164,3 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     </Layout>
   );
 }
-
-const styles = StyleSheet.create({
-  cell: {
-    width: 40,
-    height: 40,
-    lineHeight: 38,
-    fontSize: 20,
-    borderWidth: 2,
-    borderColor: "#00000030",
-    backgroundColor: "white",
-    textAlign: "center",
-  },
-  focusCell: {
-    borderColor: "#000",
-  },
-});

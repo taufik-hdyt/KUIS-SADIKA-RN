@@ -41,6 +41,7 @@ export type PlayGameNavigation = StackScreenProps<
   MainStackParamList,
   "PlayGame"
 >;
+
 export type ScoreNavigation = StackScreenProps<MainStackParamList, "Score">;
 
 const Stack = createStackNavigator<MainStackParamList>();

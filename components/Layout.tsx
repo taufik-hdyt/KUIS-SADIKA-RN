@@ -1,17 +1,21 @@
-import React, { ReactNode } from "react";
-import { ImageBackground } from "react-native";
+import React, { Fragment, ReactNode } from "react";
+import { ImageBackground, StatusBar } from "react-native";
 
 interface Props {
   children: ReactNode;
-  isCenter?: boolean
+  isCenter?: boolean;
 }
-export default function Layout({ children,isCenter }: Props) {
+export default function Layout({ children, isCenter }: Props) {
   return (
-    <ImageBackground alt="background"
-      style={{ flex: 1, justifyContent: isCenter ? "center" : "flex-start"}}
-      source={require("../assets/background.png")}
-    >
-      {children}
-    </ImageBackground>
+    <Fragment>
+      <StatusBar backgroundColor="rgba(0,0,0,.7)" />
+      <ImageBackground
+        alt="background"
+        style={{ flex: 1, justifyContent: isCenter ? "center" : "flex-start" }}
+        source={require("../assets/background.png")}
+      >
+        {children}
+      </ImageBackground>
+    </Fragment>
   );
 }

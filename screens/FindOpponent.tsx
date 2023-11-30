@@ -77,37 +77,35 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
             Match Found
           </Text>
           <Text fontSize="xl" fontWeight="semibold" textAlign="center">
-            <Text color="#0176E8">5</Text>/5
+            <Text color="#0176E8">{playerList?.player?.length}</Text>/3
           </Text>
         </Box>
 
         <Stack space={2} alignItems="center" mt={8}>
-          <View>
-            {playerList.player.map((player, i) => (
-              <HStack
-                key={player.userId}
-                borderColor="white"
-                borderStyle="solid"
-                borderWidth="2px"
-                p={1.5}
-                space={3}
-                w="280px"
-                rounded="lg"
-                bg="gray.600"
-                alignItems="center"
-              >
-                <Text color="white">{i + 1}</Text>
-                <Image
-                  style={{ width: 50, height: 50, borderRadius: 50 }}
-                  alt="profile"
-                  source={{ uri: player.userAvatar }}
-                />
-                <Text fontSize="lg" color="white" fontWeight="semibold">
-                  {player.userName}
-                </Text>
-              </HStack>
-            ))}
-          </View>
+          {playerList.player.map((player, i) => (
+            <HStack
+              key={player.userId}
+              borderColor="white"
+              borderStyle="solid"
+              borderWidth="2px"
+              p={1.5}
+              space={3}
+              w="280px"
+              rounded="lg"
+              bg="gray.600"
+              alignItems="center"
+            >
+              <Text color="white">{i + 1}</Text>
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50 }}
+                alt="profile"
+                source={{ uri: player.userAvatar }}
+              />
+              <Text fontSize="lg" color="white" fontWeight="semibold">
+                {player.userName}
+              </Text>
+            </HStack>
+          ))}
         </Stack>
         {/* <Button
           w="100px"
