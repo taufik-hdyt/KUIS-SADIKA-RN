@@ -6,14 +6,32 @@ import { Routes } from "../navigation/routes";
 import { setStatus } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { useUserProfile } from "../hooks/useUserProfile";
+import { ScoreNavigation } from "../navigation/MainNavigation";
+import { socket } from "../socket/socket";
 
-export default function ScoreScreen({ navigation }) {
+export default function ScoreScreen({ navigation }: ScoreNavigation) {
   const dispatch = useDispatch();
   const { userData } = useUserProfile();
   // const { status } = useSelector((time: RootState) => time.timer);
   useEffect(() => {
     setStatus("finished");
   }, []);
+
+  function handleReturnHome() {
+    socket.disconnect();
+    dispatch(setStatus("idle"));
+    navigation.navigate(Routes.ChangeProfile);
+  }
+
+  function handlePlayAgain() {
+    dispatch(setStatus("matchmaking"));
+    socket.emit("matchmaking", {
+      userName: userData?.username,
+      userAvatar: userData?.avatar,
+    });
+    navigation.navigate(Routes.FindOpponent);
+  }
+
   return (
     <Layout isCenter>
       <View>
@@ -30,21 +48,10 @@ export default function ScoreScreen({ navigation }) {
           {userData.username}
         </Text>
         <HStack mt={10} justifyContent="space-evenly" px={10}>
-          <Button
-            onPress={() => {
-              dispatch(setStatus("idle"));
-              navigation.navigate(Routes.StartGame);
-            }}
-            bg="#CF0A0A"
-            rounded="xl"
-          >
+          <Button onPress={handleReturnHome} bg="#CF0A0A" rounded="xl">
             Return to Home
           </Button>
-          <Button
-            onPress={() => navigation.navigate(Routes.FindOpponent)}
-            bg="#0176E8"
-            rounded="xl"
-          >
+          <Button onPress={handlePlayAgain} bg="#0176E8" rounded="xl">
             Play Again
           </Button>
         </HStack>

@@ -42,9 +42,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
   }
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected");
-    });
+    socket.connect();
   }, []);
 
   useEffect(() => {

@@ -23,6 +23,7 @@ import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
+  
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +33,6 @@ import { PlayGameNavigation } from "../navigation/MainNavigation";
 import { setAnswer, setScore } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
 import {
-  setGoNextQuestion,
   setStatus,
   setTimer,
 } from "../redux/reducers/TimerReducer";
@@ -42,8 +42,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const { timer, goNextQuestion } = useSelector(
     (state: RootState) => state.timer
   );
-  const { questions } = useSelector((state: RootState) => state.score);
-  // console.log(questions);
+  const { questions, roomId } = useSelector((state: RootState) => state.score);
 
   const score = useSelector((state: RootState) => state.score);
   // console.log("answer => ", score, "go next: " + goNextQuestion);

@@ -10,12 +10,14 @@ export interface ScoreTypes {
   currentUserScore: number;
   currentUserAnswer: string[];
   questions: QuestionType[];
+  roomId: string;
 }
 
 const initialState = {
   currentUserScore: 0,
   currentUserAnswer: [],
   questions: [],
+  roomId: "",
 } as ScoreTypes;
 
 export const Score = createSlice({
@@ -31,10 +33,14 @@ export const Score = createSlice({
     setQuestion: (state, action) => {
       state.questions = action.payload;
     },
+    setRoomId: (state, action) => {
+      state.roomId = action.payload;
+    },
     resetScoreState: () => initialState,
   },
 });
 
-export const { setAnswer, setScore, resetScoreState, setQuestion } = Score.actions;
+export const { setAnswer, setScore, resetScoreState, setQuestion, setRoomId } =
+  Score.actions;
 
 export default Score.reducer;
