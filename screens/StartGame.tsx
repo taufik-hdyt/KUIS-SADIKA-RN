@@ -5,9 +5,9 @@ import {
   HStack,
   IconButton,
   Image,
-  Spinner,
   Text,
   View,
+  Tooltip,
 } from "native-base";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,9 +21,16 @@ import { setStatus } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { resetScoreState } from "../redux/reducers/ScoreReducer";
 import { socket } from "../socket/socket";
+import {
+  LoadingAnimation,
+  LogoutAnimation,
+  QuizAnimation1,
+} from "../components/Animation";
+
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const { status } = useSelector((state: RootState) => state.timer);
+
   const dispatch = useDispatch();
 
   const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
@@ -55,54 +62,58 @@ export default function StartGame({ navigation }: StartGameNavigation) {
 
   if (isLoading)
     return (
-      <View flex={1} justifyContent="center">
-        <Spinner size="lg" accessibilityLabel="Loading" />
-      </View>
+      <Box flex={1} alignItems="center" justifyContent="center">
+        <LoadingAnimation />
+      </Box>
     );
 
   return (
     <Layout>
-      <HStack
-        px={2}
-        mt={4}
-        h="40px"
-        alignContent="center"
-        justifyContent="space-between"
-      >
+      <HStack px={2} mt={4} alignItems="center" justifyContent="space-between">
         <Image
           style={{ width: 100, height: 50 }}
           alt="logo"
           source={require("../assets/logo.png")}
-          mb={10}
         />
-        <HStack
-          space={4}
-          bg="#00edfaa0"
-          px={3}
-          py={1}
-          rounded="xl"
-          alignItems={"center"}
-        >
-          <Image
-            style={{ width: 30, height: 30 }}
-            alt="logo"
-            source={require("../assets/diamond.png")}
-          />
-          <Text fontWeight="semibold" fontSize="md" color="#1e1e1e">
-            100
-          </Text>
-          <IconButton
-            bg="#0176E8"
-            rounded="lg"
-            size="xs"
-            icon={<Feather name="plus" size={20} color="white" />}
-            onPress={() => setModalTopUp(true)}
-          />
+        <HStack alignItems="center" space={2}>
+          <HStack
+            space={2}
+            bg="rgba(255,255,255, 0.7)"
+            px={3}
+            py={1}
+            rounded="xl"
+            alignItems={"center"}
+          >
+            <Image
+              style={{ width: 30, height: 30 }}
+              alt="logo"
+              source={require("../assets/diamond.png")}
+            />
+            <Text fontWeight="semibold" fontSize="md" color="#1e1e1e">
+              100
+            </Text>
+            <IconButton
+              bg="#0176E8"
+              rounded="lg"
+              size="xs"
+              icon={<Feather name="plus" size={20} color="white" />}
+              onPress={() => setModalTopUp(true)}
+            />
+          </HStack>
+
+          <Tooltip label="Logout">
+            <IconButton
+              icon={<LogoutAnimation />}
+              bg="rgba(255,255,255, 0.7)"
+              p={1}
+              rounded="lg"
+            />
+          </Tooltip>
         </HStack>
       </HStack>
       {isLoading ? (
         <View flex={1} justifyContent="center">
-          <Spinner size="lg" accessibilityLabel="Loading" />
+          <LoadingAnimation />
         </View>
       ) : (
         <>
@@ -140,32 +151,22 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               </Text>
             </Box>
 
-            <Box alignItems="center" mt={16}>
+            <Box alignItems="center">
+              {/* <QuizAnimation /> */}
+              <QuizAnimation1 />
+            </Box>
+            <Box alignItems="center">
               <Button
                 size="lg"
                 onPress={handleStartGame}
-                bg="#2075B8"
+                bg="#0176E8"
                 px={16}
                 rounded="xl"
-                mt={-3}
+                mt={-12}
               >
                 START GAME
               </Button>
             </Box>
-            {/* {isLoaded && isSignedIn && (
-          <Box alignItems="center" mt={16}>
-            <Button
-              size="lg"
-              onPress={() => signOut()}
-              bg="#2075B8"
-              px={6}
-              rounded="xl"
-              mt={-3}
-            >
-              Log out
-            </Button>
-          </Box>
-        )} */}
           </View>
 
           <ModalChangeAvatar

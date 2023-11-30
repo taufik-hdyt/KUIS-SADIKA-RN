@@ -9,11 +9,10 @@ import StartGame from "../screens/StartGame";
 import PlayGame from "../screens/PlayGame";
 import FindOpponent from "../screens/FindOpponent";
 import { Routes } from "../navigation/routes";
-import { AntDesign } from "@expo/vector-icons";
 
 import { useAuth } from "@clerk/clerk-expo";
 import ScoreScreen from "../screens/ScoreScreen";
-import { Button, HStack, Text } from "native-base";
+
 
 export type MainStackParamList = {
   Login: undefined;
@@ -47,63 +46,25 @@ export type ScoreNavigation = StackScreenProps<MainStackParamList, "Score">;
 const Stack = createStackNavigator<MainStackParamList>();
 
 export default function MainNavigation() {
-  const { isLoaded, isSignedIn, signOut } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
   return (
-    <Stack.Navigator initialRouteName={Routes.Login}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={Routes.Login}
+    >
       {isLoaded && !isSignedIn ? (
         <Stack.Group>
-          <Stack.Screen
-            options={{
-              headerShown: false,
-            }}
-            name={Routes.Login}
-            component={Login}
-          />
+          <Stack.Screen name={Routes.Login} component={Login} />
         </Stack.Group>
       ) : (
         <Stack.Group>
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name={Routes.ChangeProfile}
-            component={ChangeProfile}
-          />
-          <Stack.Screen
-            name={Routes.StartGame}
-            component={StartGame}
-            options={{
-              headerRight: () => (
-                <Button onPress={() => signOut()} variant="unstyled">
-                  <HStack space={2} mr={3}>
-                    <AntDesign name="logout" size={24} color="black" />
-                    <Text fontWeight="semibold">Logout</Text>
-                  </HStack>
-                </Button>
-              ),
-              headerTitle: "",
-              headerLeft: () => "",
-            }}
-          />
-          <Stack.Screen
-            options={{
-              headerShown: false,
-            }}
-            name={Routes.FindOpponent}
-            component={FindOpponent}
-          />
-          <Stack.Screen
-            name={Routes.PlayGame}
-            component={PlayGame}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name={Routes.Score}
-            component={ScoreScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
+          <Stack.Screen name={Routes.ChangeProfile} component={ChangeProfile} />
+          <Stack.Screen name={Routes.StartGame} component={StartGame} />
+          <Stack.Screen name={Routes.FindOpponent} component={FindOpponent} />
+          <Stack.Screen name={Routes.PlayGame} component={PlayGame} />
+          <Stack.Screen name={Routes.Score} component={ScoreScreen} />
         </Stack.Group>
       )}
     </Stack.Navigator>

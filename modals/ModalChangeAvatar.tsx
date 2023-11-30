@@ -6,14 +6,13 @@ import {
   HStack,
   Image,
   Modal,
-  Spinner,
   Text,
   VStack,
-  View,
 } from "native-base";
 import React from "react";
 import { FlatList } from "react-native";
 import { useAvatars } from "../hooks/useAvatars";
+import { LoadingAnimation } from "../components/Animation";
 
 interface Props {
   isOpen: boolean;
@@ -23,12 +22,7 @@ interface Props {
 export default function ModalChangeAvatar({ isOpen, onClose }: Props) {
   const { isLoading, avatarsData } = useAvatars();
 
-  if (isLoading)
-    return (
-      <View flex={1} justifyContent="center">
-        <Spinner size="lg" accessibilityLabel="Loading" />
-      </View>
-    );
+  if (isLoading) return <LoadingAnimation />;
 
   return (
     <Modal
@@ -38,7 +32,7 @@ export default function ModalChangeAvatar({ isOpen, onClose }: Props) {
       animationPreset="slide"
     >
       <Modal.Content>
-        <Modal.CloseButton/>
+        <Modal.CloseButton />
         <Modal.Header>Change Avatar</Modal.Header>
         <VStack pb={4}>
           <Box alignItems={"center"} height={380}>
@@ -93,7 +87,7 @@ export default function ModalChangeAvatar({ isOpen, onClose }: Props) {
           <HStack mt={4} alignItems="center" justifyContent="center" space={3}>
             <AntDesign name="infocirlceo" size={24} color="#FF0742" />
             <Text color="#EF1F1F" textBreakStrategy="balanced">
-              You don't have enough diamonds, you can buy diamond at shop
+              You dont have enough diamonds, you can buy diamond at shop
             </Text>
           </HStack>
 

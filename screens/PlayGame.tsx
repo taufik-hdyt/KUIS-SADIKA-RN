@@ -5,10 +5,8 @@ import {
   HStack,
   Image,
   Progress,
-  Spinner,
   Stack,
   Text,
-  View,
   useToast,
 } from "native-base";
 import React, { useEffect, useState } from "react";
@@ -25,6 +23,7 @@ import { setAnswer } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
 import ToastStanding from "../components/PlayGameStandings";
 import InputAnswer from "../components/Keyboard";
+import { LoadingAnimation } from "../components/Animation";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
   const { questions } = useSelector((state: RootState) => state.score);
@@ -81,9 +80,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     <Layout>
       <ScrollView style={{ marginTop: 20 }}>
         {!questions ? (
-          <View flex={1} mt={200} alignItems={"center"} justifyContent="center">
-            <Spinner size="lg" accessibilityLabel="Loading" />
-          </View>
+          <LoadingAnimation />
         ) : (
           <>
             <Box p={4}>
