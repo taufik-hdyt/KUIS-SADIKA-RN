@@ -57,7 +57,7 @@ class RoomsData {
               return {
                 ...user,
                 answer: [...user.answer, { answer }],
-                score: user.score + score,
+                score: score,
               };
             }
             return user;

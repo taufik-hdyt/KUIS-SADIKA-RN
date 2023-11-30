@@ -64,6 +64,7 @@ export default function socketController(io: Server, socket: Socket) {
     }
 
     socket.on("addScore", ({ userId, roomId, answer, score }) => {
+      console.log(`an answer added by ${userId}`);
       if (rooms.checkRoom(roomId)) {
         rooms.changeScore(userId, roomId, score, answer);
       }
@@ -167,9 +168,7 @@ function matchStart(io: Server) {
     });
   });
 
-  const questionCount = QUESTION_PER_MATCH;
-
-  roomTime[roomID] = 90;
+  roomTime[roomID] = 95;
 
   // Update the room session timer every second
   roomTimers[roomID] = setInterval(() => {
@@ -181,122 +180,25 @@ function matchStart(io: Server) {
 
     // Check if the time has run out to set the next timer
     if (roomTime[roomID] === 0) {
-      // Increment the current question index
-      rooms.activeRooms
-        .find((room) => room.roomId === roomID)
-        ?.players.forEach((player) => {
-          player.currentQuestion++;
-        });
+      clearInterval(roomTimers[roomID]);
 
-      // Check if all questions have been answered
-      if (
-        rooms.activeRooms.find((room) => room.roomId === roomID)?.players[0]
-          ?.currentQuestion === questionCount
-      ) {
-        clearInterval(roomTimers[roomID]);
+      io.to(roomID).emit("matchOver", {
+        message: "Its Joever",
+        finalResult: rooms
+          .getRoom(roomID)
+          .players.map((player: RoomUserType) => {
+            return {
+              userId: player.user.userId,
+              userName: player.user.userName,
+              userAvatar: player.user.userAvatar,
+              score: player.score,
+              answer: player.answer,
+            };
+          }),
+      });
 
-        io.to(roomID).emit("matchOver", {
-          message: "Its Joever",
-          finalResult: rooms
-            .getRoom(roomID)
-            .players.map((player: RoomUserType) => {
-              return {
-                userId: player.user.userId,
-                userName: player.user.userName,
-                userAvatar: player.user.userAvatar,
-                score: player.score,
-                answer: player.answer,
-              };
-            }),
-        });
-
-        // Delete the room
-        rooms.deleteRoom(roomID);
-      } else {
-        roomTime[roomID] = 10;
-      }
+      // Delete the room
+      rooms.deleteRoom(roomID);
     }
   }, 1000);
 }
-
-// function matchStart(io: Server) {
-//   const roomID = createUniqueID("room_");
-//   console.log("room created", roomID);
-//   const playerSelectedToMatch = usersWaiting.allUser.splice(
-//     0,
-//     PLAYER_PER_MATCH
-//   );
-
-//   rooms.addRoom({
-//     roomId: roomID,
-//     players: playerSelectedToMatch.map((player) => ({
-//       user: player,
-//       score: 0,
-//       answer: [],
-//     })),
-//   });
-
-//   playerSelectedToMatch.forEach((user: UserDataType) => {
-//     user.socket.join(roomID);
-//     user.socket.emit("matchFound", {
-//       message: "Match Found",
-//       roomID,
-//       questions: [
-//         {
-//           id: 1,
-//           answer: "Tenaga",
-//           question:
-//             "Di rumah makan padang, selain pakai sendok kita makan pakai?",
-//         },
-//         {
-//           id: 2,
-//           answer: "Celana",
-//           question:
-//             "Selain mobil, bus atau pesawat, orang pergi dari Jakarta ke Surabaya biasanya menggunakan?",
-//         },
-//         {
-//           id: 3,
-//           answer: "Tolong",
-//           question:
-//             "Biasa digunakan untuk menyalakan atau mematikan TV dan AC?",
-//         },
-//       ],
-//     });
-//   });
-
-//   // Initialize the room session timer
-//   roomTime[roomID] = 30;
-
-//   // Update the room session timer every second
-//   roomTimers[roomID] = setInterval(() => {
-//     // Decrease the time
-//     roomTime[roomID]--;
-
-//     // Emit the updated time to all clients in the room
-//     io.to(roomID).emit("roomSessionCountdown", {
-//       time: roomTime[roomID],
-//     });
-
-//     // Check if the time has run out
-//     if (roomTime[roomID] === 0) {
-//       clearInterval(roomTimers[roomID]);
-//       // Perform actions when the timer reaches zero, e.g., end the game
-//       io.to(roomID).emit("matchOver", {
-//         message: "Its Joever",
-//         finalResult: rooms
-//           .getRoom(roomID)
-//           .players.map((player: RoomUserType) => {
-//             return {
-//               userId: player.user.userId,
-//               userName: player.user.userName,
-//               userAvatar: player.user.userAvatar,
-//               score: player.score,
-//             };
-//           }),
-//       });
-
-//       // Delete the room
-//       rooms.deleteRoom(roomID);
-//     }
-//   }, 1000);
-// }
