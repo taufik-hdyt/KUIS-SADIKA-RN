@@ -24,7 +24,7 @@ import { socket } from "../socket/socket";
 import {
   LoadingAnimation,
   LogoutAnimation,
-  QuizAnimation1,
+  QuizAnimation,
 } from "../components/Animation";
 
 
@@ -152,8 +152,8 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             </Box>
 
             <Box alignItems="center">
-              {/* <QuizAnimation /> */}
-              <QuizAnimation1 />
+              <QuizAnimation />
+              {/* <QuizAnimation1 /> */}
             </Box>
             <Box alignItems="center">
               <Button
