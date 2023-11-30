@@ -22,6 +22,7 @@ import { RootState } from "../redux/store";
 import { resetScoreState } from "../redux/reducers/ScoreReducer";
 import { socket } from "../socket/socket";
 import { LoadingAnimation, LogoutAnimation } from "../components/Animation";
+import { useAuth } from "@clerk/clerk-expo";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const { status } = useSelector((state: RootState) => state.timer);
