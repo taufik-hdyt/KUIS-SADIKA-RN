@@ -24,9 +24,7 @@ import { socket } from "../socket/socket";
 import {
   LoadingAnimation,
   LogoutAnimation,
-  QuizAnimation,
 } from "../components/Animation";
-
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const { status } = useSelector((state: RootState) => state.timer);
@@ -48,7 +46,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
     navigation.navigate(Routes.FindOpponent);
   }
 
-  useEffect(() => {;
+  useEffect(() => {
     socket.on("connect", () => {
       console.log("connected");
     });
@@ -156,7 +154,6 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               {/* <QuizAnimation1 /> */}
             </Box>
 
-            
             <Box mt={"2/6"} alignItems="center">
               <Button
                 size="lg"

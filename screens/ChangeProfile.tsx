@@ -6,7 +6,6 @@ import {
   Image,
   Input,
   SimpleGrid,
-  Spinner,
   Text,
   View,
   useToast,
@@ -21,6 +20,7 @@ import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import { useForm, Controller } from "react-hook-form";
 import { Routes } from "../navigation/routes";
 import ToastStanding from "../components/PlayGameStandings";
+import { LoadingAnimation } from "../components/Animation";
 
 export type AvatarData = {
   id: number;
@@ -75,9 +75,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
         <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       </View>
       {isLoading ? (
-        <View justifyContent="center">
-          <Spinner size="lg" accessibilityLabel="Loading" />
-        </View>
+        <LoadingAnimation />
       ) : (
         <>
           <SimpleGrid columns={4} space={3} alignItems="center">
