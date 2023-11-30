@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
   View,
-  useToast
+  useToast,
 } from "native-base";
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
@@ -31,13 +31,17 @@ import { PlayGameNavigation } from "../navigation/MainNavigation";
 import { setAnswer } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
 import { socket } from "../socket/socket";
+import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
+  const { userData } = useUserProfile();
   const { player } = useSelector((state: RootState) => state.player);
   const { questions, roomId, currentUserAnswer, currentUserScore } =
     useSelector((state: RootState) => state.score);
 
-  console.log("player log:" + player[0].userId);
+  const playerID = player.find((p) => p.userName === userData.username);
+
+  console.log(playerID.userId);
   // console.log("answer => ", score, "go next: " );
 
   const dispatch = useDispatch();
@@ -68,12 +72,6 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     if (checkAnswer) {
       setTimerQuestionKey((prevKey) => prevKey + 1);
       dispatch(setAnswer(value.toLowerCase()));
-      socket.emit("addScore", {
-        userId: player[0].userId,
-        roomId: roomId,
-        score: currentUserScore,
-        answer: currentUserAnswer,
-      });
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setValue("");
       if (question?.length !== currentQuestionIndex + 1) {
@@ -102,6 +100,17 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
       }
     }
   }, [value.toLowerCase(), getAnswer, currentQuestionIndex]);
+
+  useEffect(() => {
+    if (currentUserAnswer !== "" || currentUserScore !== 0) {
+      socket.emit("addScore", {
+        userId: playerID.userId,
+        roomId: roomId,
+        score: currentUserScore,
+        answer: currentUserAnswer,
+      });
+    }
+  }, [currentUserScore, currentUserAnswer]);
 
   return (
     <Layout>
