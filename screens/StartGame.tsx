@@ -21,10 +21,7 @@ import { setStatus } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { resetScoreState } from "../redux/reducers/ScoreReducer";
 import { socket } from "../socket/socket";
-import {
-  LoadingAnimation,
-  LogoutAnimation,
-} from "../components/Animation";
+import { LoadingAnimation, LogoutAnimation } from "../components/Animation";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const { status } = useSelector((state: RootState) => state.timer);
@@ -33,7 +30,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
 
   const [modalChangeAvatar, setModalChangeAvatar] = useState(false);
   const [modalTopUp, setModalTopUp] = useState(false);
-  // const { signOut, isLoaded, isSignedIn } = useAuth();
+  const { signOut } = useAuth();
 
   const { isLoading, userData } = useUserProfile();
 
@@ -99,6 +96,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
 
           <Tooltip label="Logout">
             <IconButton
+              onPress={() => signOut()}
               icon={<LogoutAnimation />}
               bg="rgba(255,255,255, 0.7)"
               p={1}

@@ -75,7 +75,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
         });
       }
       if (question?.length === currentQuestionIndex + 1) {
-        // navigation.navigate(Routes.Score);
+        navigation.navigate(Routes.Score);
         setCurrentQuestionIndex(0);
         setValue("");
       }
