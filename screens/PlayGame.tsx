@@ -4,13 +4,12 @@ import {
   Flex,
   HStack,
   Image,
-  Pressable,
   Progress,
   Spinner,
   Stack,
   Text,
   View,
-  useToast,
+  useToast
 } from "native-base";
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
@@ -18,34 +17,28 @@ import Layout from "../components/Layout";
 import { FontAwesome } from "@expo/vector-icons";
 import { Routes } from "../navigation/routes";
 
-import { Button, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
-  
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import { useDispatch, useSelector } from "react-redux";
-import { TimerQuestion } from "../components/TimerQuestion";
-import { useQuestions } from "../hooks/useQuestions";
-import { PlayGameNavigation } from "../navigation/MainNavigation";
-import { setAnswer, setScore } from "../redux/reducers/ScoreReducer";
-import { RootState } from "../redux/store";
-import {
-  setStatus,
-  setTimer,
-} from "../redux/reducers/TimerReducer";
 import ToastStanding from "../components/PlayGameStandings";
+import { TimerQuestion } from "../components/TimerQuestion";
+import { PlayGameNavigation } from "../navigation/MainNavigation";
+import { setAnswer } from "../redux/reducers/ScoreReducer";
+import { RootState } from "../redux/store";
+import { socket } from "../socket/socket";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
-  const { timer, goNextQuestion } = useSelector(
-    (state: RootState) => state.timer
-  );
-  const { questions, roomId } = useSelector((state: RootState) => state.score);
+  const { player } = useSelector((state: RootState) => state.player);
+  const { questions, roomId, currentUserAnswer, currentUserScore } =
+    useSelector((state: RootState) => state.score);
 
-  const score = useSelector((state: RootState) => state.score);
-  // console.log("answer => ", score, "go next: " + goNextQuestion);
+  console.log("player log:" + player[0].userId);
+  // console.log("answer => ", score, "go next: " );
 
   const dispatch = useDispatch();
   const [timerQuestionKey, setTimerQuestionKey] = useState(0);
@@ -75,6 +68,12 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     if (checkAnswer) {
       setTimerQuestionKey((prevKey) => prevKey + 1);
       dispatch(setAnswer(value.toLowerCase()));
+      socket.emit("addScore", {
+        userId: player[0].userId,
+        roomId: roomId,
+        score: currentUserScore,
+        answer: currentUserAnswer,
+      });
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setValue("");
       if (question?.length !== currentQuestionIndex + 1) {
@@ -123,7 +122,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   alignItems="center"
                 >
                   <Text fontSize="xl" fontWeight="bold">
-                    {score.currentUserScore}
+                    {currentUserScore}
                   </Text>
                   <FontAwesome name="trophy" size={34} color="#FFD700" />
                 </Flex>

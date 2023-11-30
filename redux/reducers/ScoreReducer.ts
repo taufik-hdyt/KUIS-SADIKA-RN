@@ -8,14 +8,14 @@ interface QuestionType {
 
 export interface ScoreTypes {
   currentUserScore: number;
-  currentUserAnswer: string[];
+  currentUserAnswer: string;
   questions: QuestionType[];
   roomId: string;
 }
 
 const initialState = {
   currentUserScore: 0,
-  currentUserAnswer: [],
+  currentUserAnswer: "",
   questions: [],
   roomId: "",
 } as ScoreTypes;
@@ -28,7 +28,7 @@ export const Score = createSlice({
       state.currentUserScore = state.currentUserScore + action.payload;
     },
     setAnswer: (state, action) => {
-      state.currentUserAnswer = [...state.currentUserAnswer, action.payload];
+      state.currentUserAnswer = action.payload;
     },
     setQuestion: (state, action) => {
       state.questions = action.payload;

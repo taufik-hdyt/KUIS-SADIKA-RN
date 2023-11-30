@@ -1,12 +1,11 @@
 import { Button, HStack, Image, Text, View } from "native-base";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Layout from "../components/Layout";
-import { Routes } from "../navigation/routes";
-import { setStatus } from "../redux/reducers/TimerReducer";
-import { RootState } from "../redux/store";
 import { useUserProfile } from "../hooks/useUserProfile";
 import { ScoreNavigation } from "../navigation/MainNavigation";
+import { Routes } from "../navigation/routes";
+import { setStatus } from "../redux/reducers/TimerReducer";
 import { socket } from "../socket/socket";
 
 export default function ScoreScreen({ navigation }: ScoreNavigation) {
