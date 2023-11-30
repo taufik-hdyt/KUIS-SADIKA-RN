@@ -21,6 +21,7 @@ export const Players = createSlice({
     setPlayer: (state, action) => {
       state.player = action.payload;
     },
+
     resetPlayerState: () => initialState,
   },
 });

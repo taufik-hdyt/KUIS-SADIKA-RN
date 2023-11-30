@@ -17,18 +17,27 @@ import { Routes } from "../navigation/routes";
 
 import { ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import ToastStanding from "../components/PlayGameStandings";
 import { TimerQuestion } from "../components/TimerQuestion";
 import { PlayGameNavigation } from "../navigation/MainNavigation";
 import { setAnswer } from "../redux/reducers/ScoreReducer";
 import { RootState } from "../redux/store";
-import ToastStanding from "../components/PlayGameStandings";
-import InputAnswer from "../components/Keyboard";
+import { socket } from "../socket/socket";
+import { useUserProfile } from "../hooks/useUserProfile";
 import { LoadingAnimation } from "../components/Animation";
+import InputAnswer from "../components/Keyboard";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
-  const { questions } = useSelector((state: RootState) => state.score);
+  const { userData } = useUserProfile();
+  const { player } = useSelector((state: RootState) => state.player);
+  const { questions, roomId, currentUserAnswer, currentUserScore } =
+    useSelector((state: RootState) => state.score);
 
-  const score = useSelector((state: RootState) => state.score);
+  const playerID = player.find((p) => p.userName === userData.username);
+
+  console.log(playerID.userId);
+  // console.log("answer => ", score, "go next: " );
+
   const dispatch = useDispatch();
   const [timerQuestionKey, setTimerQuestionKey] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -76,6 +85,17 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
     }
   }, [value.toLowerCase(), getAnswer, currentQuestionIndex]);
 
+  useEffect(() => {
+    if (currentUserAnswer !== "" || currentUserScore !== 0) {
+      socket.emit("addScore", {
+        userId: playerID.userId,
+        roomId: roomId,
+        score: currentUserScore,
+        answer: currentUserAnswer,
+      });
+    }
+  }, [currentUserScore, currentUserAnswer]);
+
   return (
     <Layout>
       <ScrollView style={{ marginTop: 20 }}>
@@ -93,7 +113,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   alignItems="center"
                 >
                   <Text fontSize="xl" fontWeight="bold">
-                    {score.currentUserScore}
+                    {currentUserScore}
                   </Text>
                   <FontAwesome name="trophy" size={34} color="#FFD700" />
                 </Flex>

@@ -1,17 +1,13 @@
 /* eslint-disable react/react-in-jsx-scope */
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Text, useToast } from "native-base";
 import { useEffect } from "react";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { useDispatch } from "react-redux";
-import { setScore } from "../redux/reducers/ScoreReducer";
-import { setGoNextQuestion } from "../redux/reducers/TimerReducer";
-import ToastStanding from "./PlayGameStandings";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { MainStackParamList } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
-import {
-  MainStackParamList,
-  PlayGameNavigation,
-} from "../navigation/MainNavigation";
+import { setScore } from "../redux/reducers/ScoreReducer";
+import ToastStanding from "./PlayGameStandings";
 
 interface Props {
   isPlaying: boolean;
@@ -19,7 +15,7 @@ interface Props {
   size?: number;
   textSize?: string;
   strokeWidth?: number;
-  isCheckAnswer: any;
+  isCheckAnswer: boolean;
   setQuestionIndex: (e: number) => void;
   questionIndex?: number;
   shouldNavigate?: boolean;

@@ -10,7 +10,7 @@ import { setPlayer } from "../redux/reducers/PlayersReducer";
 import { setTimer } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { socket } from "../socket/socket";
-import { setQuestion } from "../redux/reducers/ScoreReducer";
+import { setQuestion, setRoomId } from "../redux/reducers/ScoreReducer";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
   const { timer } = useSelector((time: RootState) => time.timer);
@@ -34,10 +34,12 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
       if (data) {
         // console.log(data.questions);
         dispatch(setQuestion(data.questions));
+        dispatch(setRoomId(data.roomID));
         navigation.navigate(Routes.PlayGame);
       }
     });
   }, [socket]);
+
 
   useEffect(() => {
     socket.on("findingMatch", ({ opponentsInMatchmaking }) => {
