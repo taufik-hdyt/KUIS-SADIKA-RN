@@ -55,3 +55,14 @@ export const LogoutAnimation = () => (
     />
   </View>
 );
+
+
+export const WinnerAnimation = () => (
+  <View>
+    <LottieView
+      source={require("../assets/animation/winner2.json")}
+      autoPlay
+      style={{ width: 250, height: 200 }}
+    />
+  </View>
+);

@@ -1,4 +1,15 @@
-import { Button, Image, Spinner, Text, VStack, View } from "native-base";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  Avatar,
+  Box,
+  Button,
+  HStack,
+  Spinner,
+  Stack,
+  Text,
+  VStack,
+  View,
+} from "native-base";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "../components/Layout";
@@ -7,12 +18,17 @@ import { ScoreNavigation } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
 import { setStatus } from "../redux/reducers/TimerReducer";
 import { socket } from "../socket/socket";
+import { LoadingAnimation, WinnerAnimation } from "../components/Animation";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function ScoreScreen({ navigation }: ScoreNavigation) {
   const dispatch = useDispatch();
   const [waitMatchOver, setWaitMatchOver] = useState<boolean>(true);
   const { userData } = useUserProfile();
+  const [scoreFinal, setScoreFinal] = useState([]);
   // const { status } = useSelector((time: RootState) => time.timer);
+
   useEffect(() => {
     setStatus("finished");
   }, []);
@@ -33,7 +49,8 @@ export default function ScoreScreen({ navigation }: ScoreNavigation) {
   useEffect(() => {
     socket.on("matchOver", ({ finalResult }) => {
       console.log("match over");
-      console.log(finalResult);
+
+      setScoreFinal(finalResult);
     });
   }, [socket]);
 
@@ -53,57 +70,79 @@ export default function ScoreScreen({ navigation }: ScoreNavigation) {
     });
     navigation.navigate(Routes.FindOpponent);
   }
+
+  console.log(scoreFinal);
+
   return (
-    <Layout isCenter>
+    <Layout>
       <View>
-        <Image
-          mx="auto"
-          bgColor={"#00EEFA"}
-          borderRadius={100}
-          resizeMode="cover"
-          alt="profile"
-          source={{ uri: userData?.avatar }}
-          size={"md"}
-        />
-        <Text fontWeight="semibold" fontSize="lg" textAlign="center">
-          {userData.username}
-        </Text>
-        <VStack mt={10} justifyContent="space-evenly" px={16} space={5}>
+        <Box px={4} h="full" justifyContent="center">
           {waitMatchOver ? (
-            <>
-              <View
-                flexDirection={"row"}
-                bg="#909090"
-                opacity={0.5}
-                rounded={"xl"}
-                alignItems={"center"}
-                justifyContent={"space-evenly"}
-                padding={5}
-              >
-                <Spinner />
-                <Text color={"white"}>Waiting for other to finish</Text>
-                <Spinner />
-              </View>
-            </>
+            <Box rounded={"xl"} alignItems={"center"}>
+              <LoadingAnimation />
+              <Text fontWeight="semibold" fontSize="lg">
+                Please wait for the score results ...
+              </Text>
+            </Box>
           ) : (
             <>
-              <Button onPress={handleReturnHome} bg="#CF0A0A" rounded="xl">
-                Return to Home
-              </Button>
-              <Button bg="#0176E8" rounded="xl" mx={10}>
-                See Results
-              </Button>
-              <Button
-                onPress={handlePlayAgain}
-                bg="#0176E8"
-                rounded="xl"
-                mx={10}
-              >
-                Play Again
-              </Button>
+              <Box alignItems="center">
+                <WinnerAnimation />
+              </Box>
+              <Box mt={-2} bg="rgba(0,0,0,0.6)" minH="400px" rounded="lg" p={4}>
+                <Stack space={2}>
+                  <Text
+                    mb={2}
+                    bg="#0176E8"
+                    rounded="lg"
+                    textAlign="center"
+                    fontWeight="semibold"
+                    fontSize="2xl"
+                    color="white"
+                    py={1}
+                  >
+                    Top Score ⭐⭐⭐
+                  </Text>
+                  {scoreFinal
+                    ?.sort((a, b) => b.score - a.score)
+                    .map((item, idx) => (
+                      <HStack
+                        key={idx}
+                        borderColor="white"
+                        borderWidth="1px"
+                        borderStyle="solid"
+                        py={2}
+                        px={4}
+                        rounded="lg"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <HStack alignItems="center" space={3}>
+                          <Text fontSize="md" color="white">{`${
+                            idx + 1
+                          }.`}</Text>
+                          <Avatar source={{ uri: item.userAvatar }} />
+                          <Text fontSize="md" color="white">
+                            {item.userName}
+                          </Text>
+                        </HStack>
+                        <HStack alignItems="center" space={3}>
+                          <FontAwesome5
+                            name="trophy"
+                            size={24}
+                            color="orange"
+                          />
+                          <Text fontWeight="bold" fontSize="lg" color="white">
+                            {item.score}
+                          </Text>
+                        </HStack>
+                      </HStack>
+                    ))}
+                </Stack>
+              </Box>
             </>
           )}
-        </VStack>
+        </Box>
       </View>
     </Layout>
   );

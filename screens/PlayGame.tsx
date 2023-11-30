@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  Divider,
   Flex,
   HStack,
   Image,
@@ -26,6 +27,7 @@ import { socket } from "../socket/socket";
 import { useUserProfile } from "../hooks/useUserProfile";
 import { LoadingAnimation } from "../components/Animation";
 import InputAnswer from "../components/Keyboard";
+import { Feather } from "@expo/vector-icons";
 
 export default function PlayGame({ navigation }: PlayGameNavigation) {
   const { userData } = useUserProfile();
@@ -36,7 +38,6 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const playerID = player.find((p) => p.userName === userData.username);
 
   console.log(playerID.userId);
-  // console.log("answer => ", score, "go next: " );
 
   const dispatch = useDispatch();
   const [timerQuestionKey, setTimerQuestionKey] = useState(0);
@@ -50,7 +51,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
-  const progressQuestion = (currentQuestionIndex + 1) * 20;
+  const progressQuestion = (currentQuestionIndex / question?.length) * 100;
   const checkAnswer = value.toLowerCase() === getAnswer;
   useEffect(() => {
     if (checkAnswer) {
@@ -74,16 +75,32 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
         });
       }
       if (question?.length === currentQuestionIndex + 1) {
-        navigation.navigate(Routes.Score);
+        // navigation.navigate(Routes.Score);
         setCurrentQuestionIndex(0);
         setValue("");
       }
-    } else {
-      if (answerLength === value.length) {
-        toast.show({ description: "Jawaban salah", placement: "top" });
-      }
     }
   }, [value.toLowerCase(), getAnswer, currentQuestionIndex]);
+
+  function handleCheckAnswer() {
+    if (answerLength === value.length) {
+      if (!checkAnswer) {
+        return (
+          <HStack
+            mt={4}
+            space={1}
+            alignContent="center"
+            justifyContent="center"
+          >
+            <Text fontWeight="bold" fontSize="lg" color="white">
+              Wrong Answer
+            </Text>
+            <Feather name="x-circle" size={30} color="red" />
+          </HStack>
+        );
+      }
+    }
+  }
 
   useEffect(() => {
     if (currentUserAnswer !== "" || currentUserScore !== 0) {
@@ -104,7 +121,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
         ) : (
           <>
             <Box p={4}>
-              <HStack justifyContent="flex-end" alignContent="center">
+              <HStack justifyContent="flex-end"  alignContent="center">
                 <Flex
                   bg="gray.100"
                   px={3}
@@ -112,7 +129,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   rounded="xl"
                   alignItems="center"
                 >
-                  <Text fontSize="xl" fontWeight="bold">
+                  <Text mr={2} fontSize="2xl" fontWeight="bold">
                     {currentUserScore}
                   </Text>
                   <FontAwesome name="trophy" size={34} color="#FFD700" />
@@ -159,21 +176,29 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
                   size={"100px"}
                 />
                 <Box rounded="lg" w="full" mt={-2} bg="blue.500" p={3}>
-                  <Text fontSize="lg" fontWeight="semibold" color="white">
+                  <Text
+                    mb={10}
+                    fontSize="lg"
+                    fontWeight="semibold"
+                    color="white"
+                  >
                     {getQuestion ? getQuestion : ""}
                   </Text>
+
+                  <Divider />
+                  {handleCheckAnswer()}
+                  <Box bg="rgba(0,0,0,.6)" mt={6} rounded="xl" p={2}>
+                    <Text color="white" mb={2}>
+                      Input Answer
+                    </Text>
+                    <InputAnswer
+                      setValue={setValue}
+                      value={value}
+                      answerLength={answerLength}
+                    />
+                  </Box>
                 </Box>
               </Stack>
-
-              {/* ======================= Answer ============================ */}
-
-              <Box px={6} mt={4} bg="blue.500" py={3} rounded="lg">
-                <InputAnswer
-                  setValue={setValue}
-                  value={value}
-                  answerLength={answerLength}
-                />
-              </Box>
             </Box>
           </>
         )}
