@@ -13,8 +13,8 @@ export function useQuestions() {
       try {
         const { data } = await questionsApi.get("/");
         // console.log(data);
-        
-        return data
+
+        return data;
       } catch (err) {
         Toast.show({
           description: "Error bad request",
@@ -23,8 +23,6 @@ export function useQuestions() {
       }
     },
   });
-  
 
   return { questionsData, isLoading, error };
 }
-

@@ -1,37 +1,43 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { Box, Button, HStack, Image, Stack, Text, View } from "native-base";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import { Timer } from "../components/Timer";
 import { useUserProfile } from "../hooks/useUserProfile";
 import { FindOpponentNavigation } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
-import { setStatus, setTimer } from "../redux/reducers/TimerReducer";
+import { setPlayer } from "../redux/reducers/PlayersReducer";
+import { setTimer } from "../redux/reducers/TimerReducer";
 import { RootState } from "../redux/store";
 import { socket } from "../socket/socket";
-import { setPlayer } from "../redux/reducers/PlayersReducer";
+import { setQuestion } from "../redux/reducers/ScoreReducer";
 
 export default function FindOpponent({ navigation }: FindOpponentNavigation) {
-  const { timer, goNext } = useSelector((time: RootState) => time.timer);
+  const { timer } = useSelector((time: RootState) => time.timer);
+
   const { userData } = useUserProfile();
 
   const dispatch = useDispatch();
-
-  // console.log("from findOpponent", timer);
-
-  const [find, setFind] = useState<boolean>(false);
+  const [goBack, setGoBack] = useState<boolean>(false);
 
   useEffect(() => {
     socket.on("findingMatchCountdown", ({ time }) => {
-      console.log(time);
-      
       dispatch(setTimer(time));
+      if (time === 0) {
+        navigation.navigate(Routes.PlayGame);
+      }
     });
-    return () => {
-      socket.off("findingMatchCountdown");
-    };
-  }, []);
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on("matchFound", (data) => {
+      if (data) {
+        // console.log(data.questions);
+        dispatch(setQuestion(data.questions));
+        navigation.navigate(Routes.PlayGame);
+      }
+    });
+  }, [socket]);
 
   useEffect(() => {
     socket.on("findingMatch", ({ opponentsInMatchmaking }) => {
@@ -41,30 +47,18 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
   }, [socket, dispatch]);
 
   const playerList = useSelector((state: RootState) => state.player);
-  console.log("playerList: ", playerList);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     console.log(
-  //       "in findOpponent => ",
-  //       "mm timer: " + timer,
-  //       "gonext: " + goNext
-  //     );
-  //     setFind(true);
-  //     // if (goNext) {
-  //     //   navigation.replace(Routes.PlayGame);
-  //     // }
-  //     return () => {
-  //       dispatch(setStatus("playing"));
-  //       setFind(false);
-  //       console.log(
-  //         "leaving findOpponent => ",
-  //         "mm timer: " + timer,
-  //         "gonext: " + goNext
-  //       );
-  //     };
-  //   }, [goNext])
-  // );
+  function handleCancel() {
+    if (!goBack) {
+      setGoBack(true);
+      socket.emit("cancelMatchmaking", {
+        userName: userData?.username,
+        userAvatar: userData?.avatar,
+      });
+    } else {
+      navigation.navigate(Routes.StartGame);
+    }
+  }
 
   return (
     <Layout>
@@ -115,7 +109,7 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
             ))}
           </View>
         </Stack>
-        <Button
+        {/* <Button
           w="100px"
           mx="auto"
           mt={2}
@@ -125,12 +119,24 @@ export default function FindOpponent({ navigation }: FindOpponentNavigation) {
           }}
         >
           Next
-        </Button>
-      </View>
-      <View>
-        <Button w="100px" mx="auto" mt={2} onPress={() => {}}>
-          add player
-        </Button>
+        </Button> */}
+        <View>
+          <Button
+            w="100px"
+            mx="auto"
+            variant="unstyled"
+            bgColor={"red.600"}
+            width={"160px"}
+            mt={2}
+            onPress={handleCancel}
+          >
+            {!goBack ? (
+              <Text color={"white"}>Cancel Match</Text>
+            ) : (
+              <Text color={"white"}>Go Back</Text>
+            )}
+          </Button>
+        </View>
       </View>
     </Layout>
   );

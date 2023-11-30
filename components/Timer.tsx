@@ -1,8 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { Text } from "native-base";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import { useDispatch } from "react-redux";
-import { setGoNext } from "../redux/reducers/TimerReducer";
-import { useEffect } from "react";
 
 interface Props {
   isPlaying: boolean;
@@ -18,7 +16,6 @@ export const Timer = ({
   textSize,
   strokeWidth,
 }: Props) => {
-  const dispatch = useDispatch();
   return (
     <CountdownCircleTimer
       isPlaying={isPlaying}
@@ -29,8 +26,6 @@ export const Timer = ({
       strokeWidth={strokeWidth ? strokeWidth : 8}
     >
       {({ remainingTime }) => {
-        if (remainingTime == 0) dispatch(setGoNext(true));
-
         return (
           <Text p={2} fontWeight="bold" fontSize={textSize ? textSize : "lg"}>
             {remainingTime}s

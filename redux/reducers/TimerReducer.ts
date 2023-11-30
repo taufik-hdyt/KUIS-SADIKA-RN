@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface TimerTypes {
   timer: number | null;
   status: "idle" | "matchmaking" | "playing" | "finished";
-  correctAnswer: boolean | null;
   goNext: boolean;
   goNextQuestion: boolean;
 }
