@@ -75,7 +75,9 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
         <Image alt="logo" source={require("../assets/logo.png")} mb={10} />
       </View>
       {isLoading ? (
-        <LoadingAnimation />
+        <Box flex={1} alignItems="center" justifyContent="center">
+          <LoadingAnimation />
+        </Box>
       ) : (
         <>
           <SimpleGrid columns={4} space={3} alignItems="center">
