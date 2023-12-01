@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "server": "json-server --watch server/avatar.json --host 192.168.18.111"
+    "server": "json-server --watch server/avatar.json --host 192.168.18.87"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^0.19.17",

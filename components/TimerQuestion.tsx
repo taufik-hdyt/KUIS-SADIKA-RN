@@ -8,6 +8,7 @@ import { MainStackParamList } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
 import { setScore } from "../redux/reducers/ScoreReducer";
 import ToastStanding from "./PlayGameStandings";
+import { socket } from "../socket/socket";
 
 interface Props {
   isPlaying: boolean;
@@ -47,6 +48,7 @@ export const TimerQuestion = ({
       onComplete={() => {
         if (!shouldNavigate) {
           setQuestionIndex(questionIndex + 1);
+          socket.emit("resetStandings");
           toast.show({
             placement: "bottom",
             render: ({ id }) => {

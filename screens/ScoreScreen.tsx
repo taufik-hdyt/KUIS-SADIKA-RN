@@ -89,7 +89,14 @@ export default function ScoreScreen({ navigation }: ScoreNavigation) {
               <Box alignItems="center">
                 <WinnerAnimation />
               </Box>
-              <Box mt={-2} bg="rgba(0,0,0,0.6)" minH="400px" rounded="lg" p={4}>
+              <Box
+                mt={-2}
+                bg="rgba(0,0,0,0.6)"
+                h="400px"
+                rounded="lg"
+                p={4}
+                justifyContent={"space-between"}
+              >
                 <Stack space={2}>
                   <Text
                     mb={2}
@@ -139,6 +146,42 @@ export default function ScoreScreen({ navigation }: ScoreNavigation) {
                       </HStack>
                     ))}
                 </Stack>
+                <HStack justifyContent={"space-around"} space={2}>
+                  <Button
+                    rounded="xl"
+                    px={3}
+                    justifyContent={"center"}
+                    bg="#0176E8"
+                    onPress={handleReturnHome}
+                  >
+                    <View
+                      flexDirection={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
+                      <AntDesign name="arrowleft" size={24} color="white" />
+                      <Text color="white" ml={3}>
+                        Return Home
+                      </Text>
+                    </View>
+                  </Button>
+
+                  <Button
+                    rounded="xl"
+                    px={10}
+                    justifyContent={"center"}
+                    bg="#0176E8"
+                    onPress={handlePlayAgain}
+                  >
+                    <View
+                      flexDirection={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
+                      <Text color="white">Play again</Text>
+                    </View>
+                  </Button>
+                </HStack>
               </Box>
             </>
           )}

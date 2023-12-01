@@ -37,8 +37,6 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
 
   const playerID = player.find((p) => p.userName === userData.username);
 
-  console.log(playerID.userId);
-
   const dispatch = useDispatch();
   const [timerQuestionKey, setTimerQuestionKey] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -51,8 +49,9 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
   const getAnswer = question?.[currentQuestionIndex]?.answer.toLowerCase();
   const answerLength = question?.[currentQuestionIndex]?.answer.length;
 
-  const progressQuestion = (currentQuestionIndex / question?.length) * 100;
+  const progressQuestion = (currentQuestionIndex / question?.length) * 60;
   const checkAnswer = value.toLowerCase() === getAnswer;
+
   useEffect(() => {
     if (checkAnswer) {
       setTimerQuestionKey((prevKey) => prevKey + 1);
@@ -110,6 +109,14 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
         score: currentUserScore,
         answer: currentUserAnswer,
       });
+
+      socket.emit("submitPlayGameStandings", {
+        userId: playerID.userId,
+        userAvatar: playerID.userAvatar,
+        roomId: roomId,
+        score: currentUserScore,
+        answer: currentUserAnswer,
+      });
     }
   }, [currentUserScore, currentUserAnswer]);
 
@@ -121,7 +128,7 @@ export default function PlayGame({ navigation }: PlayGameNavigation) {
         ) : (
           <>
             <Box p={4}>
-              <HStack justifyContent="flex-end"  alignContent="center">
+              <HStack justifyContent="flex-end" alignContent="center">
                 <Flex
                   bg="gray.100"
                   px={3}

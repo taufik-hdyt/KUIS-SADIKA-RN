@@ -1,5 +1,6 @@
 import { Alert, Avatar, Box, HStack, Stack, Text } from "native-base";
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { socket } from "../socket/socket";
 
 type ToastStandingProps = {
   id: string;
@@ -9,6 +10,13 @@ type ToastStandingProps = {
   correctAnswer?: string;
 };
 
+type PlayGameStandingsProps = {
+  answers: string;
+  score: number;
+  userAvatar: string;
+  userId: string;
+};
+
 export const ToastStanding = ({
   id,
   title,
@@ -16,9 +24,20 @@ export const ToastStanding = ({
   status,
   correctAnswer,
 }: ToastStandingProps) => {
-  console.log(id,title);
-  
-  
+  const [curStandings, setCurStandings] = useState<PlayGameStandingsProps[]>(
+    []
+  );
+  // console.log(id,title);
+
+  useEffect(() => {
+    socket.on("playGameStandings", ({ playGameStanding }) => {
+      setCurStandings(playGameStanding);
+      // console.log(data);
+    });
+  }, [socket]);
+
+  console.log(curStandings);
+
   return (
     <Alert
       minW="300px"
@@ -30,9 +49,9 @@ export const ToastStanding = ({
       <Box w="full">
         <Box p={2}>
           <Text fontWeight="semibold" fontSize="lg" textAlign="center">
-            Answer Results
+            Current Rankings
           </Text>
-          <Text
+          {/* <Text
             py={1}
             rounded="lg"
             color="white"
@@ -43,9 +62,9 @@ export const ToastStanding = ({
             mx="auto"
           >
             Correct Answer : <Text fontWeight="semibold">{correctAnswer}</Text>
-          </Text>
+          </Text> */}
           <Stack space={2}>
-            {Array.from({ length: 3 }, (_, idx) => (
+            {curStandings?.map((item, idx) => (
               <HStack
                 key={idx}
                 space={3}
@@ -56,14 +75,15 @@ export const ToastStanding = ({
               >
                 <Avatar
                   source={{
-                    uri: "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+                    uri: item.userAvatar,
                   }}
                 />
                 <Stack>
                   <Text fontWeight="semibold" fontSize="lg" textAlign="center">
                     Player 1
                   </Text>
-                  <Text textAlign="center">Answer : test</Text>
+                  <Text textAlign="center">Answer : {item.answers}</Text>
+                  <Text textAlign="center" color={"green.400"}>Answer : {item.answers}</Text>
                 </Stack>
               </HStack>
             ))}
