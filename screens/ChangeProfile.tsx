@@ -89,8 +89,8 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
                 <Pressable onPress={() => handleSelected(avatar.id)}>
                   <Image
                     alt={avatar.avatar_name}
-                    bg={selected === avatar.id ? "red.300" : "transparent"}
-                    rounded="lg"
+                    bg={selected === avatar.id ? "rgba(0,0,0,.7)" : "transparent"}
+                    rounded="xl"
                     size={"sm"}
                     source={{
                       uri: avatar.avatar_url,
