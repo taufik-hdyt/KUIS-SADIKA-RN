@@ -6,10 +6,11 @@ import {
   HStack,
   Image,
   Modal,
+  Pressable,
   Text,
   VStack,
 } from "native-base";
-import React from "react";
+import React, { useState } from "react";
 import { FlatList } from "react-native";
 import { useAvatars } from "../hooks/useAvatars";
 import { LoadingAnimation } from "../components/Animation";
@@ -21,6 +22,14 @@ interface Props {
 
 export default function ModalChangeAvatar({ isOpen, onClose }: Props) {
   const { isLoading, avatarsData } = useAvatars();
+  const [selected, setSelected] = useState(null);
+
+  const handleSelected = (avatarId: number) => {
+    setSelected((prevSelected: number) =>
+      prevSelected === avatarId ? null : avatarId
+    );
+    console.log(selected);
+  };
 
   if (isLoading) return <LoadingAnimation />;
 
@@ -43,44 +52,47 @@ export default function ModalChangeAvatar({ isOpen, onClose }: Props) {
               keyExtractor={(item) => item.id}
               windowSize={15}
               renderItem={({ item: avatar }) => (
-                <Box
-                  py={2}
-                  borderWidth="2px"
-                  borderColor="black"
-                  borderStyle="solid"
-                  w="80px"
-                  rounded="xl"
-                  margin={2}
-                >
-                  <Avatar
-                    bg="green.500"
-                    alignSelf="center"
-                    size="lg"
-                    source={{
-                      uri: avatar.avatar_url,
-                    }}
-                  />
-                  <Text
-                    mt={1}
-                    color="#FA9711"
-                    fontWeight="semibold"
-                    textAlign="center"
+                <Pressable onPress={() => handleSelected(avatar.id)}>
+                  <Box
+                    py={2}
+                    borderWidth="2px"
+                    borderColor="black"
+                    borderStyle="solid"
+                    w="80px"
+                    rounded="xl"
+                    bg={selected === avatar.id ? "rgba(0,0,0,.7)": "transparent"}
+                    margin={2}
                   >
-                    {avatar.price === 0 ? (
-                      <Text>Free</Text>
-                    ) : (
-                      <>
-                        <Image
-                          style={{ width: 12, height: 12 }}
-                          alt="logo"
-                          source={require("../assets/diamond.png")}
-                          mb={10}
-                        />
-                        <Text>{avatar.price}</Text>
-                      </>
-                    )}
-                  </Text>
-                </Box>
+                    <Avatar
+                      bg="green.500"
+                      alignSelf="center"
+                      size="lg"
+                      source={{
+                        uri: avatar.avatar_url,
+                      }}
+                    />
+                    <Text
+                      mt={1}
+                      color="#FA9711"
+                      fontWeight="semibold"
+                      textAlign="center"
+                    >
+                      {avatar.price === 0 ? (
+                        <Text>Free</Text>
+                      ) : (
+                        <>
+                          <Image
+                            style={{ width: 12, height: 12 }}
+                            alt="logo"
+                            source={require("../assets/diamond.png")}
+                            mb={10}
+                          />
+                          <Text>{avatar.price}</Text>
+                        </>
+                      )}
+                    </Text>
+                  </Box>
+                </Pressable>
               )}
             />
           </Box>
