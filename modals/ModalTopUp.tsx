@@ -24,6 +24,7 @@ const ModalTopUpDiamond = ({ isOpen, onClose }: IProps) => {
     { id: 3, price: 50000, qty: 25, image: "https://i.imgur.com/JKVuDl1.png" },
     { id: 4, price: 60000, qty: 35, image: "https://i.imgur.com/bZtsTyf.png" },
     { id: 5, price: 100000, qty: 80, image: "https://i.imgur.com/bP5nmqH.png" },
+    { id: 6, price: 200000, qty: 150, image: "https://i.imgur.com/bP5nmqH.png" },
   ];
 
   // state
