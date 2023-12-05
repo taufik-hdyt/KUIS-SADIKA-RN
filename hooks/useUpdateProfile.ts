@@ -38,6 +38,9 @@ export function useUpdateProfile() {
     },
   });
 
+  console.log(user?.primaryEmailAddress.emailAddress);
+  
+
   return {
     updateUser,
     isUpdating,

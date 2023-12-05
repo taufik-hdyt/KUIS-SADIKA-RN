@@ -8,13 +8,13 @@ import {
   Text,
   View,
   Tooltip,
+  Stack,
 } from "native-base";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import { useUserProfile } from "../hooks/useUserProfile";
 import ModalChangeAvatar from "../modals/ModalChangeAvatar";
-import ModalTopUp from "../modals/ModalTopUp";
 import { StartGameNavigation } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
 import { setStatus } from "../redux/reducers/TimerReducer";
@@ -23,6 +23,7 @@ import { resetScoreState } from "../redux/reducers/ScoreReducer";
 import { socket } from "../socket/socket";
 import { LoadingAnimation, LogoutAnimation } from "../components/Animation";
 import { useAuth } from "@clerk/clerk-expo";
+import ModalTopUpDiamond from "../modals/ModalTopUp";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const { status } = useSelector((state: RootState) => state.timer);
@@ -84,7 +85,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               source={require("../assets/diamond.png")}
             />
             <Text fontWeight="semibold" fontSize="md" color="#1e1e1e">
-              100
+              {userData?.diamond}
             </Text>
             <IconButton
               bg="#0176E8"
@@ -112,32 +113,35 @@ export default function StartGame({ navigation }: StartGameNavigation) {
         </View>
       ) : (
         <>
-          <View flex={1} justifyContent={"center"} mt={-160}>
-            <Box alignItems="center" mt={16}>
-              <Box position="relative">
-                <Image
-                  bgColor={"#00EEFA"}
-                  borderRadius={100}
-                  resizeMode="cover"
-                  alt="profile"
-                  source={{ uri: userData?.avatar }}
-                  size={"md"}
-                />
-
-                <Box
-                  p={1}
-                  rounded="full"
-                  right={-10}
-                  position="absolute"
-                  bottom={-5}
-                  bg="#2075B8"
-                >
-                  <Entypo
-                    onPress={() => setModalChangeAvatar(true)}
-                    name="pencil"
-                    size={23}
-                    color="white"
+          <Stack space={"2/6"} justifyContent={"center"} h="full" >
+            <Box alignItems="center" >
+              <Box position="relative" bg="#0176E8" rounded="full" p={1}>
+                <Box bg="white" rounded="full" p={.5}>
+                  <Image
+                    bgColor={"#00EEFA"}
+                    borderRadius={100}
+                    resizeMode="cover"
+                    alt="profile"
+                    source={{ uri: userData?.avatar }}
+                    size={"lg"}
                   />
+
+                  <Box
+                    p={1}
+                    rounded="full"
+                    right={-10}
+                    position="absolute"
+                    bottom={-5}
+                    bg="#0176E8"
+                  >
+
+                    <Entypo
+                      onPress={() => setModalChangeAvatar(true)}
+                      name="pencil"
+                      size={20}
+                      color="white"
+                    />
+                  </Box>
                 </Box>
               </Box>
 
@@ -147,11 +151,6 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             </Box>
 
             <Box alignItems="center">
-              {/* <QuizAnimation /> */}
-              {/* <QuizAnimation1 /> */}
-            </Box>
-
-            <Box mt={"2/6"} alignItems="center">
               <Button
                 size="lg"
                 onPress={handleStartGame}
@@ -163,13 +162,16 @@ export default function StartGame({ navigation }: StartGameNavigation) {
                 START GAME
               </Button>
             </Box>
-          </View>
+          </Stack>
 
           <ModalChangeAvatar
             isOpen={modalChangeAvatar}
             onClose={setModalChangeAvatar}
           />
-          <ModalTopUp isOpen={modalTopUp} onClose={setModalTopUp} />
+          <ModalTopUpDiamond
+            isOpen={modalTopUp}
+            onClose={() => setModalTopUp(false)}
+          />
         </>
       )}
     </Layout>

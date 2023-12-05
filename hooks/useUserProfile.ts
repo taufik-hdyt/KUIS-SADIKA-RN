@@ -8,6 +8,7 @@ type UserData = {
   email: string;
   id: string;
   username: string;
+  diamond: number
 };
 
 export function useUserProfile() {
