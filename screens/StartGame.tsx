@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import { useUserProfile } from "../hooks/useUserProfile";
 import ModalChangeAvatar from "../modals/ModalChangeAvatar";
-import ModalTopUp from "../modals/ModalTopUp";
 import { StartGameNavigation } from "../navigation/MainNavigation";
 import { Routes } from "../navigation/routes";
 import { setStatus } from "../redux/reducers/TimerReducer";
@@ -23,6 +22,7 @@ import { resetScoreState } from "../redux/reducers/ScoreReducer";
 import { socket } from "../socket/socket";
 import { LoadingAnimation, LogoutAnimation } from "../components/Animation";
 import { useAuth } from "@clerk/clerk-expo";
+import ModalTopUpDiamond from "../modals/ModalTopUp";
 
 export default function StartGame({ navigation }: StartGameNavigation) {
   const { status } = useSelector((state: RootState) => state.timer);
@@ -84,7 +84,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               source={require("../assets/diamond.png")}
             />
             <Text fontWeight="semibold" fontSize="md" color="#1e1e1e">
-              100
+              {userData?.diamond}
             </Text>
             <IconButton
               bg="#0176E8"
@@ -146,11 +146,6 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               </Text>
             </Box>
 
-            <Box alignItems="center">
-              {/* <QuizAnimation /> */}
-              {/* <QuizAnimation1 /> */}
-            </Box>
-
             <Box mt={"2/6"} alignItems="center">
               <Button
                 size="lg"
@@ -169,7 +164,10 @@ export default function StartGame({ navigation }: StartGameNavigation) {
             isOpen={modalChangeAvatar}
             onClose={setModalChangeAvatar}
           />
-          <ModalTopUp isOpen={modalTopUp} onClose={setModalTopUp} />
+          <ModalTopUpDiamond
+            isOpen={modalTopUp}
+            onClose={() => setModalTopUp(false)}
+          />
         </>
       )}
     </Layout>
