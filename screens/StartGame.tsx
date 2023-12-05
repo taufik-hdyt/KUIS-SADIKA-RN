@@ -8,6 +8,7 @@ import {
   Text,
   View,
   Tooltip,
+  Stack,
 } from "native-base";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -112,32 +113,35 @@ export default function StartGame({ navigation }: StartGameNavigation) {
         </View>
       ) : (
         <>
-          <View flex={1} justifyContent={"center"} mt={-160}>
-            <Box alignItems="center" mt={16}>
-              <Box position="relative">
-                <Image
-                  bgColor={"#00EEFA"}
-                  borderRadius={100}
-                  resizeMode="cover"
-                  alt="profile"
-                  source={{ uri: userData?.avatar }}
-                  size={"md"}
-                />
-
-                <Box
-                  p={1}
-                  rounded="full"
-                  right={-10}
-                  position="absolute"
-                  bottom={-5}
-                  bg="#2075B8"
-                >
-                  <Entypo
-                    onPress={() => setModalChangeAvatar(true)}
-                    name="pencil"
-                    size={23}
-                    color="white"
+          <Stack space={"2/6"} justifyContent={"center"} h="full" >
+            <Box alignItems="center" >
+              <Box position="relative" bg="#0176E8" rounded="full" p={1}>
+                <Box bg="white" rounded="full" p={.5}>
+                  <Image
+                    bgColor={"#00EEFA"}
+                    borderRadius={100}
+                    resizeMode="cover"
+                    alt="profile"
+                    source={{ uri: userData?.avatar }}
+                    size={"lg"}
                   />
+
+                  <Box
+                    p={1}
+                    rounded="full"
+                    right={-10}
+                    position="absolute"
+                    bottom={-5}
+                    bg="#0176E8"
+                  >
+
+                    <Entypo
+                      onPress={() => setModalChangeAvatar(true)}
+                      name="pencil"
+                      size={20}
+                      color="white"
+                    />
+                  </Box>
                 </Box>
               </Box>
 
@@ -146,7 +150,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
               </Text>
             </Box>
 
-            <Box mt={"2/6"} alignItems="center">
+            <Box alignItems="center">
               <Button
                 size="lg"
                 onPress={handleStartGame}
@@ -158,7 +162,7 @@ export default function StartGame({ navigation }: StartGameNavigation) {
                 START GAME
               </Button>
             </Box>
-          </View>
+          </Stack>
 
           <ModalChangeAvatar
             isOpen={modalChangeAvatar}
