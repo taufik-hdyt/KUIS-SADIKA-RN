@@ -58,7 +58,7 @@ export default function ScoreScreen({ navigation }: ScoreNavigation) {
     socket.disconnect();
     dispatch(setStatus("idle"));
     setWaitMatchOver(true);
-    navigation.navigate(Routes.ChangeProfile);
+    navigation.navigate(Routes.StartGame);
   }
 
   function handlePlayAgain() {

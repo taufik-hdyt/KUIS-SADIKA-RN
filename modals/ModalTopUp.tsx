@@ -145,7 +145,7 @@ const ModalTopUpDiamond = ({ isOpen, onClose }: IProps) => {
             <Button onPress={onClose} rounded="xl" bg="red.500">
               Cancel
             </Button>
-            <Button onPress={() => Process()} rounded="xl" bg="green.500">
+            <Button isDisabled={!selected} onPress={() => Process()} rounded="xl" bg="green.500">
               Purchase
             </Button>
           </HStack>
