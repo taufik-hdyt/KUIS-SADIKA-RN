@@ -9,10 +9,10 @@ import StartGame from "../screens/StartGame";
 import PlayGame from "../screens/PlayGame";
 import FindOpponent from "../screens/FindOpponent";
 import { Routes } from "../navigation/routes";
+import React = require("react");
 
 import { useAuth } from "@clerk/clerk-expo";
 import ScoreScreen from "../screens/ScoreScreen";
-
 
 export type MainStackParamList = {
   Login: undefined;

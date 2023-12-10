@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "native-base";
 import { useState } from "react";
-import { postUserApi } from "../axios/axiosApi";
+import { UserAPI, postUserApi } from "../axios/axiosApi";
 import { useUser } from "@clerk/clerk-expo";
 
 export function useUpdateProfile() {
@@ -16,8 +16,7 @@ export function useUpdateProfile() {
   const [form, setForm] = useState({
     username: "",
     email: userEmail,
-    avatar:
-      "",
+    avatar: "",
   });
 
   const { mutate: updateUser, isPending: isUpdating } = useMutation({
@@ -38,7 +37,18 @@ export function useUpdateProfile() {
     },
   });
 
-  console.log(user?.primaryEmailAddress.emailAddress);
+  // console.log(user?.primaryEmailAddress.emailAddress);
+
+  const { data: checkEmail } = useQuery({
+    queryFn: async () => {
+      const response = await UserAPI.get("/checkEmail/user6@example.com");
+      return response.data;
+    },
+    queryKey: ["checkEmail"],
+  });
+
+  console.log(checkEmail);
+  
   
 
   return {

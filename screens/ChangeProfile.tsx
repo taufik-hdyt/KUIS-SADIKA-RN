@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import {
   Box,
   Button,
@@ -39,6 +39,9 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
     (avatar: AvatarData) => avatar.price === 0
   );
   const { form, setForm, isUpdating, updateUser } = useUpdateProfile();
+  
+  
+
   const selectedAvatar = freeAvatars?.find(
     (avatar: AvatarData) => avatar.id === selected
   );
@@ -69,6 +72,7 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
     }, 1000);
   }
 
+ 
   return (
     <Layout isCenter>
       <View alignItems="center">
@@ -89,7 +93,9 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
                 <Pressable onPress={() => handleSelected(avatar.id)}>
                   <Image
                     alt={avatar.avatar_name}
-                    bg={selected === avatar.id ? "rgba(0,0,0,.7)" : "transparent"}
+                    bg={
+                      selected === avatar.id ? "rgba(0,0,0,.7)" : "transparent"
+                    }
                     rounded="xl"
                     size={"sm"}
                     source={{
@@ -184,7 +190,6 @@ export default function ChangeProfile({ navigation }: ProfileNavigation) {
             >
               HEHE
             </Button>
-            
           </Box>
         </>
       )}
