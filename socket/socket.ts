@@ -1,2 +1,2 @@
 import { io } from "socket.io-client";
-export const socket = io("http://192.168.18.111:4000");
+export const socket = io(`http://${process.env.EXPO_PUBLIC_IP_ADDRESS}:4000`);
